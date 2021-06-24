@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
 import token from './space-traders-api-access-token';
 import Users from './data/Users';
@@ -7,13 +8,17 @@ import Loans from './data/Loans';
 import Ships from './data/Ships';
 import MyShips from './data/MyShips';
 import Goods from './data/Goods';
+import Market from './data/Market';
+import Locations from './data/Locations';
 import TakeOutALoan from './forms/TakeOutALoan';
 import PurchaseAShip from './forms/PurchaseAShip';
 import PlaceANewPurchaseOrder from './forms/PlaceANewPurchaseOrder';
 
 import fetchWithRetry from './fetch-with-retry';
+import fetchData from './fetch-data';
 
 import './App.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const api = 'https://api.spacetraders.io/';
 
@@ -25,6 +30,8 @@ function Client() {
   const [ships, setShips] = useState([]);
   const [myShips, setMyShips] = useState([]);
   const [goods, setGoods] = useState([]);
+  const [marketGoods, setMarketGoods] = useState([]);
+  const [locations, setLocations] = useState([]);
   const [takeOutALoanValue, setTakeOutALoanValue] = useState('');
   const [purchaseAShipValue, setPurchaseAShipValue] = useState('');
   const [purchaseOrderGoodsValue, setPurchaseOrderGoodsValue] = useState('');
@@ -101,18 +108,20 @@ function Client() {
         ));
       });
 
-    fetchWithRetry(`${api}game/status`)
-      .then((r) => r.json())
-      .then(({ status }) => setGameStatus(status));
+    fetchData(`${api}game/status`, setGameStatus, 'status');
 
-    fetchWithRetry(`${api}my/ships?token=${token}`)
-      .then((r) => r.json())
-      .then((shipsResponse) => setMyShips((s) => [...s, ...shipsResponse.ships]));
+    fetchData(`${api}my/ships?token=${token}`, setMyShips, 'ships', 'id');
 
-    fetchWithRetry(`${api}types/goods?token=${token}`)
-      .then((r) => r.json())
-      .then((goodsResponse) => setGoods((g) => [...g, ...goodsResponse.goods]));
+    fetchData(`${api}types/goods?token=${token}`, setGoods, 'goods', 'symbol');
   }, []);
+
+  useEffect(() => {
+    if (myShips[0]) {
+      fetchData(`${api}locations/${myShips[0].location}/marketplace?token=${token}`, setMarketGoods, 'marketplace', 'symbol');
+
+      fetchData(`${api}systems/${myShips[0].location.match(/^(?<system>[^-]*).*$/).groups.system}/locations?token=${token}`, setLocations, 'locations', 'symbol');
+    }
+  }, [myShips]);
 
   const handleChange = function handleChange(setter) {
     return function changeHandler({ target }) {
@@ -120,11 +129,14 @@ function Client() {
     };
   };
 
-  const handleSubmit = function handleSubmit(fetchAddress, fetchOptions, jsonHandler) {
+  const handleSubmit = function handleSubmit(
+    fetchAddress, fetchOptions, jsonHandler, errorHandler = (err) => toast.error(err),
+  ) {
     return function submitHandler(event) {
       fetchWithRetry(fetchAddress, fetchOptions)
         .then((r) => r.json())
-        .then((json) => jsonHandler(json));
+        .then((json) => jsonHandler(json))
+        .catch((error) => errorHandler(error));
       event.preventDefault();
     };
   };
@@ -132,6 +144,7 @@ function Client() {
   return (
     <div className="App">
       <header className="App-header">
+        <ToastContainer />
         <h1>Space Traders React Client</h1>
         <h2>{gameStatus}</h2>
       </header>
@@ -148,6 +161,8 @@ function Client() {
           <Ships ships={ships} />
           <MyShips myShips={myShips} />
           <Goods goods={goods} />
+          <Market goods={marketGoods} />
+          <Locations locations={locations} />
         </section>
         <section className="forms">
           <h2>forms</h2>
@@ -207,6 +222,12 @@ function Client() {
                 });
 
                 setMyShips(updateMyShips);
+                toast.success('purchase success!');
+              },
+              (err) => {
+                if (err.message === 'Quantity purchased exceeds ship\'s loading speed.') {
+                  toast.error(`${err.message}\nMax loading speed is ${err.data.loadingSpeed}`);
+                }
               },
             )}
           />
