@@ -35,3 +35,25 @@
     transform: rotate(360deg);
   }
 }
+
+table {
+  border-spacing: 0;
+}
+
+td {
+  padding: 10px;
+}
+
+tr {
+  margin: 0;
+  padding: 10px;
+}
+
+#me {
+  background-color: chartreuse;
+
+}
+
+#me::after {
+  content: "this is me!";
+}

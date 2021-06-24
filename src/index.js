@@ -4,8 +4,8 @@ import './index.css';
 import Client from './Client';
 import reportWebVitals from './reportWebVitals';
 
-const appElement = React.createElement(Client);
-const strictModeElement = React.createElement(React.StrictMode, [], [appElement]);
+const appElement = React.createElement(Client, { key: 'client' });
+const strictModeElement = React.createElement(React.StrictMode, {}, appElement);
 
 ReactDOM.render(
   strictModeElement,
