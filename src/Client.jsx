@@ -6,6 +6,7 @@ import LoanTypes from './data/LoanTypes';
 import Loans from './data/Loans';
 import Ships from './data/Ships';
 import MyShips from './data/MyShips';
+import Goods from './data/Goods';
 import TakeOutALoan from './forms/TakeOutALoan';
 import PurchaseAShip from './forms/PurchaseAShip';
 import './App.css';
@@ -17,6 +18,7 @@ function Client() {
   const [loans, setLoans] = useState([]);
   const [ships, setShips] = useState([]);
   const [myShips, setMyShips] = useState([]);
+  const [goods, setGoods] = useState([]);
   const [takeOutALoanValue, setTakeOutALoanValue] = useState('');
   const [purchaseAShipValue, setPurchaseAShipValue] = useState('');
   const [gameStatus, setGameStatus] = useState('');
@@ -97,6 +99,10 @@ function Client() {
     fetch(`https://api.spacetraders.io/my/ships?token=${token}`)
       .then((r) => r.json())
       .then((shipsResponse) => setMyShips((s) => [...s, ...shipsResponse.ships]));
+
+    fetch(`https://api.spacetraders.io/types/goods?token=${token}`)
+      .then((r) => r.json())
+      .then((goodsResponse) => setGoods((g) => [...g, ...goodsResponse.goods]));
   }, []);
 
   const handleChange = function handleChange(setter) {
@@ -132,6 +138,7 @@ function Client() {
           <Loans loans={loans} />
           <Ships ships={ships} />
           <MyShips myShips={myShips} />
+          <Goods goods={goods} />
         </section>
         <section className="forms">
           <h2>forms</h2>

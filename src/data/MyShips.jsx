@@ -7,7 +7,7 @@ import Data from './Data';
 const MyShips = function MyShips({ myShips }) {
   return (
     <Data
-      name="ships"
+      name="my ships"
       fields={['make', 'model', 'location', 'coordinates', 'class', 'speed', 'capacity', 'cargo', 'space used', 'armor', 'attack', 'id']}
       records={myShips.map((e) => ({ ...e, id: e.type + e.location }))}
       RowComponent={MyShip}
