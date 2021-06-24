@@ -7,7 +7,7 @@ import token from './space-traders-api-access-token';
 // import logo from './logo.svg';
 import './App.css';
 
-function App() {
+function Client() {
   // const [user, setUser] = useState({
   //   credits: 0,
   //   joinedAt: '',
@@ -56,4 +56,4 @@ function App() {
   );
 }
 
-export default App;
+export default Client;

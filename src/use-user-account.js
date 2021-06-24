@@ -6,16 +6,16 @@ const useUserAccount = function useUserAccount(token) {
     joinedAt: '',
     shipCount: 0,
     structureCount: 0,
-    username: ''
+    username: '',
   });
 
   useEffect(() => {
     fetch(`https://api.spacetraders.io/my/account?token=${token}`)
-      .then(r => r.json())
-      .then(userResponse => setUser(userResponse.user));
+      .then((r) => r.json())
+      .then((userResponse) => setUser(userResponse.user));
   }, [token]);
 
   return user;
-}
+};
 
 export default useUserAccount;
