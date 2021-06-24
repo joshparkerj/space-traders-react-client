@@ -6,7 +6,12 @@ import Data from './Data';
 
 const Users = function Users({ users }) {
   return (
-    <Data name="users" fields={['name', 'age', 'ships', 'structures', 'credits']} records={users.map((e) => ({ ...e, id: e.username }))} RowComponent={User} />
+    <Data
+      name="users"
+      fields={['name', 'age', 'ships', 'structures', 'credits']}
+      records={users.map((e) => ({ ...e, id: e.username }))}
+      RowComponent={User}
+    />
   );
 };
 

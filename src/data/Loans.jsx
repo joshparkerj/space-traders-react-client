@@ -6,7 +6,12 @@ import Data from './Data';
 
 const Loans = function Loans({ loans }) {
   return (
-    <Data name="loans" fields={['type', 'status', 'amount', 'due date', 'id']} records={loans} RowComponent={Loan} />
+    <Data
+      name="loans"
+      fields={['type', 'status', 'amount', 'due date', 'id']}
+      records={loans}
+      RowComponent={Loan}
+    />
   );
 };
 

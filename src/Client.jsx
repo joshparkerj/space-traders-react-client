@@ -9,7 +9,13 @@ import MyShips from './data/MyShips';
 import Goods from './data/Goods';
 import TakeOutALoan from './forms/TakeOutALoan';
 import PurchaseAShip from './forms/PurchaseAShip';
+import PlaceANewPurchaseOrder from './forms/PlaceANewPurchaseOrder';
+
+import fetchWithRetry from './fetch-with-retry';
+
 import './App.css';
+
+const api = 'https://api.spacetraders.io/';
 
 function Client() {
   const [users, setUsers] = useState([]);
@@ -21,16 +27,19 @@ function Client() {
   const [goods, setGoods] = useState([]);
   const [takeOutALoanValue, setTakeOutALoanValue] = useState('');
   const [purchaseAShipValue, setPurchaseAShipValue] = useState('');
+  const [purchaseOrderGoodsValue, setPurchaseOrderGoodsValue] = useState('');
+  const [purchaseOrderShipsValue, setPurchaseOrderShipsValue] = useState('');
+  const [purchaseOrderQuantityValue, setPurchaseOrderQuantityValue] = useState('0');
   const [gameStatus, setGameStatus] = useState('');
 
   useEffect(() => {
     const takeOutALoan = function takeOutALoan(type) {
       return () => {
-        const fetchAddress = `https://api.spacetraders.io/my/loans?token${token}&type=${type}`;
+        const fetchAddress = `${api}my/loans?token${token}&type=${type}`;
         const fetchOptions = {
           method: 'POST',
         };
-        fetch(fetchAddress, fetchOptions)
+        fetchWithRetry(fetchAddress, fetchOptions)
           .then((r) => r.json())
           .then((jsonResponse) => {
             setLoanTypes((l) => [...l, jsonResponse.loan]);
@@ -39,7 +48,7 @@ function Client() {
       };
     };
 
-    fetch(`https://api.spacetraders.io/types/loans?token=${token}`)
+    fetchWithRetry(`${api}types/loans?token=${token}`)
       .then((r) => r.json())
       .then((jsonResponse) => {
         const newLoans = jsonResponse.loans.map((loan) => ({
@@ -54,7 +63,7 @@ function Client() {
   }, [loans]);
 
   useEffect(() => {
-    fetch(`https://api.spacetraders.io/my/account?token=${token}`)
+    fetchWithRetry(`${api}my/account?token=${token}`)
       .then((r) => r.json())
       .then(({ user }) => setUsers((u) => {
         if (u.map((e) => e.username).includes(user.username)) {
@@ -64,7 +73,7 @@ function Client() {
         return [...u, user];
       }));
 
-    fetch(`https://api.spacetraders.io/my/loans?token=${token}`)
+    fetchWithRetry(`${api}my/loans?token=${token}`)
       .then((r) => r.json())
       .then((loansResponse) => {
         setLoans((l) => [
@@ -75,7 +84,7 @@ function Client() {
         ]);
       });
 
-    fetch(`https://api.spacetraders.io/systems/OE/ship-listings?token=${token}&class=MK-I`)
+    fetchWithRetry(`${api}systems/OE/ship-listings?token=${token}&class=MK-I`)
       .then((r) => r.json())
       .then(({ shipListings }) => {
         const reducedListings = shipListings.reduce((acc, e) => {
@@ -92,15 +101,15 @@ function Client() {
         ));
       });
 
-    fetch('https://api.spacetraders.io/game/status')
+    fetchWithRetry(`${api}game/status`)
       .then((r) => r.json())
       .then(({ status }) => setGameStatus(status));
 
-    fetch(`https://api.spacetraders.io/my/ships?token=${token}`)
+    fetchWithRetry(`${api}my/ships?token=${token}`)
       .then((r) => r.json())
       .then((shipsResponse) => setMyShips((s) => [...s, ...shipsResponse.ships]));
 
-    fetch(`https://api.spacetraders.io/types/goods?token=${token}`)
+    fetchWithRetry(`${api}types/goods?token=${token}`)
       .then((r) => r.json())
       .then((goodsResponse) => setGoods((g) => [...g, ...goodsResponse.goods]));
   }, []);
@@ -113,7 +122,7 @@ function Client() {
 
   const handleSubmit = function handleSubmit(fetchAddress, fetchOptions, jsonHandler) {
     return function submitHandler(event) {
-      fetch(fetchAddress, fetchOptions)
+      fetchWithRetry(fetchAddress, fetchOptions)
         .then((r) => r.json())
         .then((json) => jsonHandler(json));
       event.preventDefault();
@@ -146,17 +155,21 @@ function Client() {
             loanTypes={loanTypes.map((e) => e.type)}
             value={takeOutALoanValue}
             handleChange={handleChange(setTakeOutALoanValue)}
-            handleSubmit={handleSubmit(`https://api.spacetraders.io/my/loans?token=${token}&type=${takeOutALoanValue}`, { method: 'POST' }, (json) => {
-              setLoans((l) => [...l, json.loan]);
-              setCredits(json.credits);
-            })}
+            handleSubmit={handleSubmit(
+              `${api}my/loans?token=${token}&type=${takeOutALoanValue}`,
+              { method: 'POST' },
+              (json) => {
+                setLoans((l) => [...l, json.loan]);
+                setCredits(json.credits);
+              },
+            )}
           />
           <PurchaseAShip
             ships={ships}
             value={purchaseAShipValue}
             handleChange={handleChange(setPurchaseAShipValue)}
             handleSubmit={handleSubmit(
-              'https://api.spacetraders.io/my/ships'
+              `${api}my/ships`
               + `?token=${token}`
               + `&location=${purchaseAShipValue ? purchaseAShipValue.split(' ')[0] : ''}`
               + `&type=${purchaseAShipValue ? purchaseAShipValue.split(' ')[1] : ''}`,
@@ -164,6 +177,36 @@ function Client() {
               (json) => {
                 setMyShips((s) => [...s, json.ship]);
                 setCredits(json.user.credits);
+              },
+            )}
+          />
+          <PlaceANewPurchaseOrder
+            goods={goods}
+            ships={myShips}
+            goodsValue={purchaseOrderGoodsValue}
+            shipsValue={purchaseOrderShipsValue}
+            quantityValue={purchaseOrderQuantityValue}
+            handleGoodsChange={handleChange(setPurchaseOrderGoodsValue)}
+            handleShipChange={handleChange(setPurchaseOrderShipsValue)}
+            handleQuantityChange={handleChange(setPurchaseOrderQuantityValue)}
+            handleSubmit={handleSubmit(
+              `${api}my/purchase-orders`
+              + `?token=${token}`
+              + `&shipId=${purchaseOrderShipsValue}`
+              + `&good=${purchaseOrderGoodsValue}`
+              + `&quantity=${purchaseOrderQuantityValue}`,
+              { method: 'POST' },
+              (json) => {
+                setCredits(json.credits);
+                const updateMyShips = myShips.map((ship) => {
+                  if (ship.id === json.ship.id) {
+                    return json.ship;
+                  }
+
+                  return ship;
+                });
+
+                setMyShips(updateMyShips);
               },
             )}
           />

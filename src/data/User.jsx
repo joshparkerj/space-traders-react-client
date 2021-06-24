@@ -5,7 +5,16 @@ import Datum from './Datum';
 
 const User = function User({ record: user }) {
   return (
-    <Datum name="user" details={[user.username, moment(user.joinedAt).fromNow(true), user.shipCount, user.structureCount, user.credits].map((e, i) => ({ detail: e, id: i }))} />
+    <Datum
+      name="user"
+      details={[
+        user.username,
+        moment(user.joinedAt).fromNow(true),
+        user.shipCount,
+        user.structureCount,
+        user.credits,
+      ].map((e, i) => ({ detail: e, id: i }))}
+    />
   );
 };
 

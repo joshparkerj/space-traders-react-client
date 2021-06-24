@@ -8,7 +8,19 @@ const MyShips = function MyShips({ myShips }) {
   return (
     <Data
       name="my ships"
-      fields={['make', 'model', 'location', 'coordinates', 'class', 'speed', 'capacity', 'cargo', 'space used', 'armor', 'attack', 'id']}
+      fields={['make',
+        'model',
+        'location',
+        'coordinates',
+        'class',
+        'speed',
+        'capacity',
+        'cargo',
+        'space used',
+        'armor',
+        'attack',
+        'id',
+      ]}
       records={myShips.map((e) => ({ ...e, id: e.type + e.location }))}
       RowComponent={MyShip}
     />

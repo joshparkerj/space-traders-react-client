@@ -1,15 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import LabelForSelect from './LabelForSelect';
+
 const TakeOutALoan = function TakeOutALoan({
   loanTypes, value, handleChange, handleSubmit,
 }) {
   return (
     <form className="take-out-a-loan" onSubmit={handleSubmit}>
       <h3>take out a loan</h3>
-      <select value={value} onChange={handleChange}>
-        {['', ...loanTypes].map((loanType) => <option key={loanType} value={loanType}>{loanType}</option>)}
-      </select>
+      <LabelForSelect
+        id="loan-form-types"
+        name="loan types"
+        value={value}
+        handleChange={handleChange}
+        options={loanTypes}
+      />
 
       <input type="submit" value="Submit" />
     </form>

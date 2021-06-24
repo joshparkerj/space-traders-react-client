@@ -14,7 +14,7 @@ const MyShip = function MyShip({ record: myShip }) {
         myShip.class,
         myShip.speed,
         myShip.maxCargo,
-        myShip.cargo.join(),
+        JSON.stringify(myShip.cargo),
         myShip.maxCargo - myShip.spaceAvailable,
         myShip.plating,
         myShip.weapons,

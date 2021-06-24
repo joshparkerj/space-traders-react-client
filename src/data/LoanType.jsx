@@ -5,7 +5,16 @@ import Datum from './Datum';
 
 const LoanType = function LoanType({ record: loan }) {
   return (
-    <Datum name="loan type" details={[loan.type, loan.termInDays, loan.rate, loan.collateralRequired, loan.amount].map((e, i) => ({ detail: e, id: i }))} />
+    <Datum
+      name="loan type"
+      details={[
+        loan.type,
+        loan.termInDays,
+        loan.rate,
+        loan.collateralRequired,
+        loan.amount,
+      ].map((e, i) => ({ detail: e, id: i }))}
+    />
   );
 };
 

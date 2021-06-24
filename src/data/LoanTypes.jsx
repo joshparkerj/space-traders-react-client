@@ -6,7 +6,12 @@ import Data from './Data';
 
 const LoanTypes = function LoanTypes({ loans }) {
   return (
-    <Data name="loan types" fields={['name', 'term', 'rate', 'collateral required?', 'amount']} records={loans.map((loan) => ({ ...loan, id: loan.type }))} RowComponent={LoanType} />
+    <Data
+      name="loan types"
+      fields={['name', 'term', 'rate', 'collateral required?', 'amount']}
+      records={loans.map((loan) => ({ ...loan, id: loan.type }))}
+      RowComponent={LoanType}
+    />
   );
 };
 
