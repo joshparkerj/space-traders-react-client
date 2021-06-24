@@ -93,6 +93,10 @@ function Client() {
     fetch('https://api.spacetraders.io/game/status')
       .then((r) => r.json())
       .then(({ status }) => setGameStatus(status));
+
+    fetch(`https://api.spacetraders.io/my/ships?token=${token}`)
+      .then((r) => r.json())
+      .then((shipsResponse) => setMyShips((s) => [...s, ...shipsResponse.ships]));
   }, []);
 
   const handleChange = function handleChange(setter) {
