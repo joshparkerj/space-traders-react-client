@@ -19,6 +19,7 @@ function Client() {
   const [myShips, setMyShips] = useState([]);
   const [takeOutALoanValue, setTakeOutALoanValue] = useState('');
   const [purchaseAShipValue, setPurchaseAShipValue] = useState('');
+  const [gameStatus, setGameStatus] = useState('');
 
   useEffect(() => {
     const takeOutALoan = function takeOutALoan(type) {
@@ -88,6 +89,10 @@ function Client() {
           ]
         ));
       });
+
+    fetch('https://api.spacetraders.io/game/status')
+      .then((r) => r.json())
+      .then(({ status }) => setGameStatus(status));
   }, []);
 
   const handleChange = function handleChange(setter) {
@@ -109,6 +114,7 @@ function Client() {
     <div className="App">
       <header className="App-header">
         <h1>Space Traders React Client</h1>
+        <h2>{gameStatus}</h2>
       </header>
       <main>
         <div className="credits">
