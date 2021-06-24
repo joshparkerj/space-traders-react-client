@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Datum from './Datum';
 
-const Loan = function Loan({ record: loan, key: id }) {
+const Loan = function Loan({ record: loan }) {
   return (
-    <Datum name="user" details={[loan.type, loan.status, loan.repaymentAmount, loan.due, id].map((e, i) => ({ id: i, detail: e }))} />
+    <Datum name="user" details={[loan.type, loan.status, loan.repaymentAmount, loan.due, loan.id].map((e, i) => ({ id: i, detail: e }))} />
   );
 };
 
@@ -16,7 +16,6 @@ Loan.propTypes = {
     status: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
   }).isRequired,
-  key: PropTypes.string.isRequired,
 };
 
 export default Loan;
