@@ -5,7 +5,9 @@ import Users from './data/Users';
 import LoanTypes from './data/LoanTypes';
 import Loans from './data/Loans';
 import Ships from './data/Ships';
+import MyShips from './data/MyShips';
 import TakeOutALoan from './forms/TakeOutALoan';
+import PurchaseAShip from './forms/PurchaseAShip';
 import './App.css';
 
 function Client() {
@@ -14,7 +16,9 @@ function Client() {
   const [credits, setCredits] = useState(null);
   const [loans, setLoans] = useState([]);
   const [ships, setShips] = useState([]);
+  const [myShips, setMyShips] = useState([]);
   const [takeOutALoanValue, setTakeOutALoanValue] = useState('');
+  const [purchaseAShipValue, setPurchaseAShipValue] = useState('');
 
   useEffect(() => {
     const takeOutALoan = function takeOutALoan(type) {
@@ -79,7 +83,7 @@ function Client() {
           [
             ...s,
             ...reducedListings.filter((ship) => (
-              !s.map((e) => e.model + e.location).includes(ship.model + ship.location)
+              !s.map((e) => e.type + e.location).includes(ship.type + ship.location)
             )),
           ]
         ));
@@ -117,6 +121,7 @@ function Client() {
           <LoanTypes loans={loanTypes} />
           <Loans loans={loans} />
           <Ships ships={ships} />
+          <MyShips myShips={myShips} />
         </section>
         <section className="forms">
           <h2>forms</h2>
@@ -128,6 +133,22 @@ function Client() {
               setLoans((l) => [...l, json.loan]);
               setCredits(json.credits);
             })}
+          />
+          <PurchaseAShip
+            ships={ships}
+            value={purchaseAShipValue}
+            handleChange={handleChange(setPurchaseAShipValue)}
+            handleSubmit={handleSubmit(
+              'https://api.spacetraders.io/my/ships'
+              + `?token=${token}`
+              + `&location=${purchaseAShipValue ? purchaseAShipValue.split(' ')[0] : ''}`
+              + `&type=${purchaseAShipValue ? purchaseAShipValue.split(' ')[1] : ''}`,
+              { method: 'POST' },
+              (json) => {
+                setMyShips((s) => [...s, json.ship]);
+                setCredits(json.user.credits);
+              },
+            )}
           />
         </section>
       </main>
