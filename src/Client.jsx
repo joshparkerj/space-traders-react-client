@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from 'react';
 
-// import useUserAccounts from './use-user-accounts';
-// import useLoanTypes from './use-loan-types';
 import token from './space-traders-api-access-token';
 import Users from './data/Users';
 import LoanTypes from './data/LoanTypes';
 import Loans from './data/Loans';
+import Ships from './data/Ships';
 import TakeOutALoan from './forms/TakeOutALoan';
 import './App.css';
 
 function Client() {
-  // const users = useUserAccounts(token);
-  // const { loanTypes, credits } = useLoanTypes(token);
-  // const loans = useLoans(token);
   const [users, setUsers] = useState([]);
   const [loanTypes, setLoanTypes] = useState([]);
   const [credits, setCredits] = useState(null);
   const [loans, setLoans] = useState([]);
+  const [ships, setShips] = useState([]);
   const [takeOutALoanValue, setTakeOutALoanValue] = useState('');
 
   useEffect(() => {
@@ -62,7 +59,31 @@ function Client() {
 
     fetch(`https://api.spacetraders.io/my/loans?token=${token}`)
       .then((r) => r.json())
-      .then((loansResponse) => setLoans((l) => [...l, ...loansResponse.loans]));
+      .then((loansResponse) => {
+        setLoans((l) => [
+          ...l,
+          ...(loansResponse
+            ? loansResponse.loans.filter((newLoan) => !l.map((e) => e.id).includes(newLoan.id))
+            : []),
+        ]);
+      });
+
+    fetch(`https://api.spacetraders.io/systems/OE/ship-listings?token=${token}&class=MK-I`)
+      .then((r) => r.json())
+      .then(({ shipListings }) => {
+        const reducedListings = shipListings.reduce((acc, e) => {
+          const { purchaseLocations, ...noLoc } = e;
+          return [...acc, ...purchaseLocations.map((loc) => ({ ...loc, ...noLoc }))];
+        }, []);
+        setShips((s) => (
+          [
+            ...s,
+            ...reducedListings.filter((ship) => (
+              !s.map((e) => e.model + e.location).includes(ship.model + ship.location)
+            )),
+          ]
+        ));
+      });
   }, []);
 
   const handleChange = function handleChange(setter) {
@@ -95,6 +116,7 @@ function Client() {
           <Users users={users} />
           <LoanTypes loans={loanTypes} />
           <Loans loans={loans} />
+          <Ships ships={ships} />
         </section>
         <section className="forms">
           <h2>forms</h2>
