@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# private information akshuaally
+src/space-traders-api-access-token.js
