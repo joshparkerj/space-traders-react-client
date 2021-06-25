@@ -9,9 +9,11 @@ import MyShips from './data/MyShips';
 import Goods from './data/Goods';
 import Market from './data/Market';
 import Locations from './data/Locations';
+import FlightPlans from './data/FlightPlans';
 import TakeOutALoan from './forms/TakeOutALoan';
 import PurchaseAShip from './forms/PurchaseAShip';
 import PlaceANewPurchaseOrder from './forms/PlaceANewPurchaseOrder';
+import CreateFlightPlan from './forms/CreateFlightPlan';
 
 import api from './api/api';
 
@@ -28,11 +30,14 @@ function Client() {
   const [goods, setGoods] = useState([]);
   const [marketGoods, setMarketGoods] = useState([]);
   const [locations, setLocations] = useState([]);
+  const [flightPlans, setFlightPlans] = useState([]);
   const [takeOutALoanValue, setTakeOutALoanValue] = useState('');
   const [purchaseAShipValue, setPurchaseAShipValue] = useState('');
   const [purchaseOrderGoodsValue, setPurchaseOrderGoodsValue] = useState('');
   const [purchaseOrderShipsValue, setPurchaseOrderShipsValue] = useState('');
   const [purchaseOrderQuantityValue, setPurchaseOrderQuantityValue] = useState('0');
+  const [flightPlanShipsValue, setFlightPlanShipsValue] = useState('');
+  const [flightPlanDestinationValue, setFlightPlanDestinationValue] = useState('');
   const [gameStatus, setGameStatus] = useState('');
 
   useEffect(() => {
@@ -49,9 +54,11 @@ function Client() {
   }, []);
 
   useEffect(() => {
-    if (myShips[0]) {
+    if (myShips[0] && myShips[0].location) {
+      const { system } = myShips[0].location.match(/^(?<system>[^-]*).*$/).groups;
       api.getLocationMarketplaces(myShips[0].location, setMarketGoods);
-      api.getSystemLocations(myShips[0].location.match(/^(?<system>[^-]*).*$/).groups.system, setLocations);
+      api.getSystemLocations(system, setLocations);
+      api.getSystemFlightPlans(system, setFlightPlans);
     }
   }, [myShips]);
 
@@ -90,6 +97,7 @@ function Client() {
           <Goods goods={goods} />
           <Market goods={marketGoods} />
           <Locations locations={locations} />
+          <FlightPlans flightPlans={flightPlans} />
         </section>
         <section className="forms">
           <h2>forms</h2>
@@ -130,10 +138,22 @@ function Client() {
               {
                 shipId: purchaseOrderShipsValue,
                 good: purchaseOrderGoodsValue,
-                quantity: purchaseOrderGoodsValue,
+                quantity: purchaseOrderQuantityValue,
                 setCredits,
                 setMyShips,
               },
+            )}
+          />
+          <CreateFlightPlan
+            ships={myShips}
+            shipsValue={flightPlanShipsValue}
+            locations={locations}
+            destinationValue={flightPlanDestinationValue}
+            handleShipChange={handleChange(setFlightPlanShipsValue)}
+            handleDestinationChange={handleChange(setFlightPlanDestinationValue)}
+            handleSubmit={handleSubmit(
+              api.createFlightPlan,
+              { shipId: flightPlanShipsValue, destination: flightPlanDestinationValue },
             )}
           />
         </section>

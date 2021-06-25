@@ -1,4 +1,4 @@
-import fetchWithRetry from '../fetch-with-retry';
+import fetchWithRetry from './fetch-with-retry';
 
 const fetchPost = function fetchPost(
   fetchAddress, jsonHandler, errorHandler,
