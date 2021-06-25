@@ -24,13 +24,23 @@ const fetchData = function fetchData(fetchAddress, setter, arrayName, idField) {
     fetchWithRetry(fetchAddress)
       .then((r) => r.json())
       .then((jsonResponse) => {
-        setter((oldData) => [
-          ...oldData,
-          ...(jsonResponse
-            ? jsonResponse[arrayName]
-              .filter((newDatum) => !oldData.map((e) => getId(e)).includes(getId(newDatum)))
-            : []),
-        ]);
+        if (Array.isArray(jsonResponse[arrayName])) {
+          setter((oldData) => [
+            ...oldData,
+            ...(jsonResponse
+              ? jsonResponse[arrayName]
+                .filter((newDatum) => !oldData.map((e) => getId(e)).includes(getId(newDatum)))
+              : []),
+          ]);
+        } else {
+          setter((oldData) => [
+            ...oldData,
+            ...(oldData.map((e) => getId(e)).includes(getId(jsonResponse[arrayName]))
+              ? []
+              : [jsonResponse[arrayName]]
+            ),
+          ]);
+        }
       })
       .then(() => resolve())
       .catch(() => reject());

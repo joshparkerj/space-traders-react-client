@@ -35,7 +35,7 @@ MyShip.propTypes = {
     plating: PropTypes.number.isRequired,
     speed: PropTypes.number.isRequired,
     weapons: PropTypes.number.isRequired,
-    cargo: PropTypes.arrayOf(PropTypes.string).isRequired,
+    cargo: PropTypes.arrayOf(PropTypes.object).isRequired,
     spaceAvailable: PropTypes.number.isRequired,
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired,
