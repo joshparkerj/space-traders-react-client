@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import LabelForSelect from './LabelForSelect';
 
 const Trade = function Trade({
-  shipIds,
+  ships,
   shipValue,
   handleShipChange,
   locations,
@@ -23,7 +23,7 @@ const Trade = function Trade({
         name="ship id"
         value={shipValue}
         handleChange={handleShipChange}
-        options={shipIds}
+        options={ships.map((ship) => ({ optionName: `${ship.manufacturer} at ${ship.location}`, optionValue: ship.id }))}
       />
 
       <LabelForSelect
@@ -31,7 +31,7 @@ const Trade = function Trade({
         name="destination"
         value={destinationValue}
         handleChange={handleDestinationChange}
-        options={locations}
+        options={locations.map((location) => ({ optionName: `${location.symbol} (${location.name})`, optionValue: location.symbol }))}
       />
 
       <LabelForSelect
@@ -39,7 +39,7 @@ const Trade = function Trade({
         name="good"
         value={goodValue}
         handleChange={handleGoodChange}
-        options={goods}
+        options={goods.map((good) => ({ optionName: good.symbol, optionValue: good.symbol }))}
       />
 
       <input type="submit" value="Submit" />
@@ -48,20 +48,20 @@ const Trade = function Trade({
 };
 
 Trade.propTypes = {
-  shipIds: PropTypes.arrayOf(PropTypes.string),
+  ships: PropTypes.arrayOf(PropTypes.object),
   shipValue: PropTypes.string.isRequired,
   handleShipChange: PropTypes.func.isRequired,
-  locations: PropTypes.arrayOf(PropTypes.string),
+  locations: PropTypes.arrayOf(PropTypes.object),
   destinationValue: PropTypes.string.isRequired,
   handleDestinationChange: PropTypes.func.isRequired,
-  goods: PropTypes.arrayOf(PropTypes.string),
+  goods: PropTypes.arrayOf(PropTypes.object),
   goodValue: PropTypes.string.isRequired,
   handleGoodChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 };
 
 Trade.defaultProps = {
-  shipIds: [],
+  ships: [],
   locations: [],
   goods: [],
 };

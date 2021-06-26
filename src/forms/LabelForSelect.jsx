@@ -8,7 +8,7 @@ const LabelForSelect = function LabelForSelect({
     <label htmlFor={id}>
       <h4>{name}</h4>
       <select id={id} value={value} onChange={handleChange}>
-        {['', ...options].map((option) => <option key={option} value={option}>{option}</option>)}
+        {['', ...options].map(({ optionName, optionValue }) => <option key={optionValue || ''} value={optionValue || ''}>{optionName || ''}</option>)}
       </select>
     </label>
   );
@@ -19,7 +19,7 @@ LabelForSelect.propTypes = {
   name: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
-  options: PropTypes.arrayOf(PropTypes.string).isRequired,
+  options: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default LabelForSelect;

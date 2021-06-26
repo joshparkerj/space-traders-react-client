@@ -23,14 +23,14 @@ const PlaceANewPurchaseOrder = function PlaceANewPurchaseOrder({
         name="good"
         value={goodsValue}
         handleChange={handleGoodsChange}
-        options={goods.map((good) => good.symbol)}
+        options={goods.map((good) => ({ optionName: good.symbol, optionValue: good.symbol }))}
       />
       <LabelForSelect
         id="purchase-order-ship"
         name="ship"
         value={shipsValue}
         handleChange={handleShipChange}
-        options={ships.map((ship) => ship.id)}
+        options={ships.map((ship) => ({ optionName: `${ship.manufacturer} at ${ship.location}`, optionValue: ship.id }))}
       />
       <LabelForNumber
         id="purchase-order-quantity"

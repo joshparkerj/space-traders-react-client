@@ -12,14 +12,11 @@ const MyShips = function MyShips({ myShips }) {
         'model',
         'location',
         'coordinates',
-        'class',
         'speed',
         'capacity',
+        'fuel',
         'cargo',
         'space used',
-        'armor',
-        'attack',
-        'id',
       ]}
       records={myShips.map((e) => ({ ...e, id: e.id }))}
       RowComponent={MyShip}

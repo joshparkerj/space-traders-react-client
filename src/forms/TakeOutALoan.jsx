@@ -14,7 +14,7 @@ const TakeOutALoan = function TakeOutALoan({
         name="loan types"
         value={value}
         handleChange={handleChange}
-        options={loanTypes}
+        options={loanTypes.map((lt) => ({ optionName: lt, optionValue: lt }))}
       />
 
       <input type="submit" value="Submit" />

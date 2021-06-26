@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Datum from './Datum';
 
 const MyShip = function MyShip({ record: myShip }) {
+  const fuel = myShip.cargo.find((good) => good.good === 'FUEL').totalVolume;
   return (
     <Datum
       name="ship"
@@ -11,14 +12,11 @@ const MyShip = function MyShip({ record: myShip }) {
         myShip.type,
         myShip.location,
         `(${myShip.x}, ${myShip.y})`,
-        myShip.class,
         myShip.speed,
-        myShip.maxCargo,
-        JSON.stringify(myShip.cargo),
-        myShip.maxCargo - myShip.spaceAvailable,
-        myShip.plating,
-        myShip.weapons,
-        myShip.id,
+        myShip.maxCargo - fuel,
+        fuel,
+        myShip.cargo.filter((good) => good.good !== 'FUEL').map((good) => `${good.good} ${good.totalVolume}`).join('\n'),
+        myShip.maxCargo - myShip.spaceAvailable - fuel,
       ].map((e, i) => ({ detail: e, id: i }))}
     />
   );

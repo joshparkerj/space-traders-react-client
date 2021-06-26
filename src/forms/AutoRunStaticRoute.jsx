@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import LabelForSelect from './LabelForSelect';
 
 const AutoRunStaticRoute = function AutoRunStaticRoute({
-  shipIds, value, handleChange, handleSubmit,
+  ships, value, handleChange, handleSubmit,
 }) {
   return (
     <form className="auto-run-static-route" onSubmit={handleSubmit}>
@@ -14,7 +14,7 @@ const AutoRunStaticRoute = function AutoRunStaticRoute({
         name="ship id"
         value={value}
         handleChange={handleChange}
-        options={shipIds}
+        options={ships.map((ship) => ({ optionName: `${ship.manufacturer} at ${ship.location}`, optionValue: ship.id }))}
       />
 
       <input type="submit" value="Submit" />
@@ -23,14 +23,14 @@ const AutoRunStaticRoute = function AutoRunStaticRoute({
 };
 
 AutoRunStaticRoute.propTypes = {
-  shipIds: PropTypes.arrayOf(PropTypes.string),
+  ships: PropTypes.arrayOf(PropTypes.object),
   value: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 };
 
 AutoRunStaticRoute.defaultProps = {
-  shipIds: [],
+  ships: [],
 };
 
 export default AutoRunStaticRoute;

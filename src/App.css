@@ -11,10 +11,17 @@
   color: white;
 }
 
+main {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+table.loans,
 table.goods,
 table.flight-plans,
-/* table.ships, */
-table.loan-types {
+table.ships,
+table.loan-types,
+table.locations {
   display: none;
 }
 

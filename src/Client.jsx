@@ -53,6 +53,7 @@ function Client() {
   const [repayLoanValue, setRepayLoanValue] = useState('');
   const [gameStatus, setGameStatus] = useState('');
   const [marketLocation, setMarketLocation] = useState('');
+  const [currentSystem, setCurrentSystem] = useState('');
 
   useEffect(() => {
     api.types.getTypesOfLoans(setLoanTypes);
@@ -71,9 +72,13 @@ function Client() {
     if (myShips[0] && myShips[0].location) {
       const { location } = myShips[0];
       const { system } = location.match(/^(?<system>[^-]*).*$/).groups;
-      api.systems.getSystemLocations(system, setLocations);
+      setCurrentSystem(system);
     }
   }, [myShips]);
+
+  useEffect(() => {
+    api.systems.getSystemLocations(currentSystem, setLocations);
+  }, [currentSystem]);
 
   useEffect(() => {
     if (marketLocation) {
@@ -102,11 +107,11 @@ function Client() {
         <h2>{gameStatus}</h2>
       </header>
       <main>
-        <div className="credits">
-          <span>credits:</span>
-          <span>{credits}</span>
-        </div>
         <section className="data">
+          <div className="credits">
+            <span>credits:</span>
+            <span>{credits}</span>
+          </div>
           <h2>data</h2>
           <Users users={users} />
           {/* <LoanTypes loans={loanTypes} /> */}
@@ -202,7 +207,7 @@ function Client() {
             )}
           />
           <AutoRunStaticRoute
-            shipIds={myShips.map((ship) => ship.id)}
+            ships={myShips}
             value={staticRouteShipValue}
             handleChange={handleChange(setStaticRouteShipValue)}
             handleSubmit={handleSubmit(
@@ -216,13 +221,13 @@ function Client() {
             )}
           />
           <Trade
-            shipIds={myShips.map((ship) => ship.id)}
+            ships={myShips}
             shipValue={tradeShipValue}
             handleShipChange={handleChange(setTradeShipValue)}
-            locations={locations.map((location) => location.symbol)}
+            locations={locations}
             destinationValue={tradeDestinationValue}
             handleDestinationChange={handleChange(setTradeDestinationValue)}
-            goods={goods.map((good) => good.symbol)}
+            goods={goods}
             goodValue={tradeGoodValue}
             handleGoodChange={handleChange(setTradeGoodValue)}
             handleSubmit={handleSubmit(
