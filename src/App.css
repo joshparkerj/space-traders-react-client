@@ -19,7 +19,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
   color: white;
 }
 
@@ -36,6 +35,13 @@
   }
 }
 
+table.goods,
+table.flight-plans,
+/* table.ships, */
+table.loan-types {
+  display: none;
+}
+
 section, table, form {
   border: 1px solid silver;
   border-radius: 10px;
@@ -45,6 +51,11 @@ section, table, form {
 
 table {
   border-spacing: 0;
+  display: inline-block;
+}
+
+form {
+  display: inline-block;
 }
 
 td, th {

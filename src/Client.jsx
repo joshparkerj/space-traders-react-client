@@ -2,23 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 
 import Users from './data/Users';
-import LoanTypes from './data/LoanTypes';
 import Loans from './data/Loans';
 import Ships from './data/Ships';
 import MyShips from './data/MyShips';
-import Goods from './data/Goods';
 import Market from './data/Market';
 import Locations from './data/Locations';
-import FlightPlans from './data/FlightPlans';
-// import WhereToSell from './data/WhereToSell';
+
 import TakeOutALoan from './forms/TakeOutALoan';
 import PurchaseAShip from './forms/PurchaseAShip';
 import PlaceANewPurchaseOrder from './forms/PlaceANewPurchaseOrder';
 import SellTradeGoods from './forms/SellTradeGoods';
 import CreateFlightPlan from './forms/CreateFlightPlan';
+import AutoRunStaticRoute from './forms/AutoRunStaticRoute';
+import Trade from './forms/Trade';
 
 import api from './api/api';
+
 import fly from './auto-trade/fly';
+import staticRoute from './auto-trade/static-route';
+import trade from './auto-trade/trade';
 
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -33,7 +35,6 @@ function Client() {
   const [goods, setGoods] = useState([]);
   const [marketGoods, setMarketGoods] = useState([]);
   const [locations, setLocations] = useState([]);
-  const [flightPlans, setFlightPlans] = useState([]);
   const [takeOutALoanValue, setTakeOutALoanValue] = useState('');
   const [purchaseAShipValue, setPurchaseAShipValue] = useState('');
   const [purchaseOrderGoodsValue, setPurchaseOrderGoodsValue] = useState('');
@@ -44,6 +45,10 @@ function Client() {
   const [sellQuantityValue, setSellQuantityValue] = useState('0');
   const [flightPlanShipsValue, setFlightPlanShipsValue] = useState('');
   const [flightPlanDestinationValue, setFlightPlanDestinationValue] = useState('');
+  const [staticRouteShipValue, setStaticRouteShipValue] = useState('');
+  const [tradeShipValue, setTradeShipValue] = useState('');
+  const [tradeGoodValue, setTradeGoodValue] = useState('');
+  const [tradeDestinationValue, setTradeDestinationValue] = useState('');
   const [gameStatus, setGameStatus] = useState('');
 
   useEffect(() => {
@@ -65,14 +70,6 @@ function Client() {
       const { system } = location.match(/^(?<system>[^-]*).*$/).groups;
       api.getLocationMarketplaces(myShips[0].location, setMarketGoods);
       api.getSystemLocations(system, setLocations);
-      api.getSystemFlightPlans(system, setFlightPlans);
-      // if (myShips[0].cargo) {
-      //   const { good } = myShips[0].cargo.filter((e) => e.good !== 'FUEL')[0];
-      //   if (good) {
-      //     whereToSell(good, location)
-      //       .then((places) => setPlacesToSell(places));
-      //   }
-      // }
     }
   }, [myShips]);
 
@@ -104,14 +101,14 @@ function Client() {
         <section className="data">
           <h2>data</h2>
           <Users users={users} />
-          <LoanTypes loans={loanTypes} />
+          {/* <LoanTypes loans={loanTypes} /> */}
           <Loans loans={loans} />
           <Ships ships={ships} />
           <MyShips myShips={myShips} />
-          <Goods goods={goods} />
+          {/* <Goods goods={goods} /> */}
           <Market goods={marketGoods} />
           <Locations locations={locations} />
-          <FlightPlans flightPlans={flightPlans} />
+          {/* <FlightPlans flightPlans={flightPlans} /> */}
         </section>
         <section className="forms">
           <h2>forms</h2>
@@ -187,7 +184,46 @@ function Client() {
             handleDestinationChange={handleChange(setFlightPlanDestinationValue)}
             handleSubmit={handleSubmit(
               fly,
-              { shipId: flightPlanShipsValue, destination: flightPlanDestinationValue },
+              {
+                shipId: flightPlanShipsValue,
+                destination: flightPlanDestinationValue,
+                setCredits,
+                setMyShips,
+              },
+            )}
+          />
+          <AutoRunStaticRoute
+            shipIds={myShips.map((ship) => ship.id)}
+            value={staticRouteShipValue}
+            handleChange={handleChange(setStaticRouteShipValue)}
+            handleSubmit={handleSubmit(
+              staticRoute,
+              {
+                shipId: staticRouteShipValue,
+                setCredits,
+                setMyShips,
+              },
+            )}
+          />
+          <Trade
+            shipIds={myShips.map((ship) => ship.id)}
+            shipValue={tradeShipValue}
+            handleShipChange={handleChange(setTradeShipValue)}
+            locations={locations.map((location) => location.symbol)}
+            destinationValue={tradeDestinationValue}
+            handleDestinationChange={handleChange(setTradeDestinationValue)}
+            goods={goods.map((good) => good.symbol)}
+            goodValue={tradeGoodValue}
+            handleGoodChange={handleChange(setTradeGoodValue)}
+            handleSubmit={handleSubmit(
+              trade,
+              {
+                shipId: tradeShipValue,
+                good: tradeGoodValue,
+                destination: tradeDestinationValue,
+                setCredits,
+                setMyShips,
+              },
             )}
           />
         </section>

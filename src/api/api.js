@@ -47,8 +47,10 @@ const getTypesOfGoods = function getTypesOfGoods(setter) {
 };
 
 const getLocationMarketplaces = function getLocationsMarketplaces(location, setter) {
-  return new Promise((resolve) => {
-    resolve(fetchData(`${root}locations/${location}/marketplace?token=${token}`, setter, 'marketplace', 'symbol'));
+  return new Promise((resolve, reject) => {
+    fetchData(`${root}locations/${location}/marketplace?token=${token}`, setter, 'marketplace', 'symbol')
+      .then(() => resolve())
+      .catch((err) => reject(err));
   });
 };
 
@@ -84,19 +86,25 @@ const placeANewPurchaseOrder = function placeANewPurchaseOrder(
     shipId, good, quantity, setCredits, setMyShips,
   }, toast,
 ) {
-  fetchPost(`${root}my/purchase-orders?token=${token}&shipId=${shipId}&good=${good}&quantity=${quantity}`)
-    .then((json) => {
-      setCredits(json.credits);
-      setMyShips((s) => [...s.map((ship) => (ship.id === json.ship.id ? json.ship : ship))]);
-      toast.success('purchase success!');
-    })
-    .catch((err) => {
-      if (err.message === 'Quantity purchased exceeds ship\'s loading speed.') {
-        toast.error(`${err.message}\nMax loading speed is ${err.data.loadingSpeed}`);
-      } else {
-        toast.error(err);
-      }
-    });
+  return new Promise((resolve, reject) => {
+    fetchPost(`${root}my/purchase-orders?token=${token}&shipId=${shipId}&good=${good}&quantity=${quantity}`)
+      .then((json) => {
+        setCredits(json.credits);
+        setMyShips((s) => [...s.map((ship) => (ship.id === json.ship.id ? json.ship : ship))]);
+        const { quantity: orderQuantity, good: orderGood, total } = json.order;
+        toast.success(`bought ${orderQuantity} ${orderGood} for ${total}`);
+        resolve(json);
+      })
+      .catch((err) => {
+        if (err.message === 'Quantity purchased exceeds ship\'s loading speed.') {
+          toast.error(`${err.message}\nMax loading speed is ${err.data.loadingSpeed}`);
+        } else {
+          toast.error(err);
+        }
+
+        reject(err);
+      });
+  });
 };
 
 const takeOutALoan = function takeOutALoan({ type, setLoans, setCredits }, toast) {
@@ -113,7 +121,21 @@ const createFlightPlan = function createFlightPlan({ shipId, destination }, toas
     fetchPost(`${root}my/flight-plans?token=${token}&shipId=${shipId}&destination=${destination}`)
       .then((json) => {
         console.log('fetch post has resolved');
-        toast.success('flight plan created!');
+        const {
+          destination: flightPlanDestination, fuelConsumed, timeRemainingInSeconds,
+        } = json.flightPlan;
+        let time;
+        if (timeRemainingInSeconds >= 60) {
+          if (timeRemainingInSeconds % 60 > 0) {
+            time = `${Math.floor(timeRemainingInSeconds / 60)} minutes and ${timeRemainingInSeconds % 60} seconds`;
+          } else {
+            time = `${timeRemainingInSeconds / 60} minutes`;
+          }
+        } else {
+          time = `${timeRemainingInSeconds} seconds`;
+        }
+
+        toast.success(`flying to ${flightPlanDestination}. Will use ${fuelConsumed} fuel and arrive in ${time}`);
         resolve(json);
       })
       .catch((err) => {
@@ -125,8 +147,9 @@ const createFlightPlan = function createFlightPlan({ shipId, destination }, toas
 
 const sellTradeGoods = function sellTradeGoods({ shipId, good, quantity }, toast) {
   fetchPost(`${root}my/sell-orders?token=${token}&shipId=${shipId}&good=${good}&quantity=${quantity}`)
-    .then(() => {
-      toast.success('trade goods sold!');
+    .then((json) => {
+      const { good: orderGood, total, quantity: orderQuantity } = json.order;
+      toast.success(`sold ${orderQuantity} ${orderGood} for ${total}`);
     })
     .catch((err) => {
       if (err.message === 'Quantity purchased exceeds ship\'s loading speed.') {

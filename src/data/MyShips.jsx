@@ -21,7 +21,7 @@ const MyShips = function MyShips({ myShips }) {
         'attack',
         'id',
       ]}
-      records={myShips.map((e) => ({ ...e, id: e.type + e.location }))}
+      records={myShips.map((e) => ({ ...e, id: e.id }))}
       RowComponent={MyShip}
     />
   );
