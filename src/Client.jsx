@@ -52,28 +52,34 @@ function Client() {
   const [tradeDestinationValue, setTradeDestinationValue] = useState('');
   const [repayLoanValue, setRepayLoanValue] = useState('');
   const [gameStatus, setGameStatus] = useState('');
+  const [marketLocation, setMarketLocation] = useState('');
 
   useEffect(() => {
-    api.getTypesOfLoans(setLoanTypes);
+    api.types.getTypesOfLoans(setLoanTypes);
   }, [loans]);
 
   useEffect(() => {
-    api.getMyAccount(setUsers);
-    api.getMyLoans(setLoans);
-    api.getSystemShipListings(setShips);
-    api.getGameStatus(setGameStatus);
-    api.getMyShips(setMyShips);
-    api.getTypesOfGoods(setGoods);
+    api.account.getMyAccount(setUsers);
+    api.loans.getMyLoans(setLoans);
+    api.systems.getSystemShipListings(setShips);
+    api.game.getGameStatus(setGameStatus);
+    api.ships.getMyShips(setMyShips);
+    api.types.getTypesOfGoods(setGoods);
   }, []);
 
   useEffect(() => {
     if (myShips[0] && myShips[0].location) {
       const { location } = myShips[0];
       const { system } = location.match(/^(?<system>[^-]*).*$/).groups;
-      api.getLocationMarketplaces(myShips[0].location, setMarketGoods);
-      api.getSystemLocations(system, setLocations);
+      api.systems.getSystemLocations(system, setLocations);
     }
   }, [myShips]);
+
+  useEffect(() => {
+    if (marketLocation) {
+      api.locations.getLocationMarketplaces(marketLocation, setMarketGoods);
+    }
+  }, [marketLocation]);
 
   const handleChange = function handleChange(setter) {
     return function changeHandler({ target }) {
@@ -119,7 +125,7 @@ function Client() {
             value={takeOutALoanValue}
             handleChange={handleChange(setTakeOutALoanValue)}
             handleSubmit={handleSubmit(
-              api.takeOutALoan,
+              api.loans.takeOutALoan,
               { type: takeOutALoanValue, setLoans, setCredits },
             )}
           />
@@ -128,7 +134,7 @@ function Client() {
             value={purchaseAShipValue}
             handleChange={handleChange(setPurchaseAShipValue)}
             handleSubmit={handleSubmit(
-              api.purchaseAShip,
+              api.ships.purchaseAShip,
               {
                 location: purchaseAShipValue ? purchaseAShipValue.split(' ')[0] : '',
                 type: purchaseAShipValue ? purchaseAShipValue.split(' ')[1] : '',
@@ -147,7 +153,7 @@ function Client() {
             handleShipChange={handleChange(setPurchaseOrderShipsValue)}
             handleQuantityChange={handleChange(setPurchaseOrderQuantityValue)}
             handleSubmit={handleSubmit(
-              api.placeANewPurchaseOrder,
+              api.purchaseOrders.placeANewPurchaseOrder,
               {
                 shipId: purchaseOrderShipsValue,
                 good: purchaseOrderGoodsValue,
@@ -167,7 +173,7 @@ function Client() {
             handleShipChange={handleChange(setSellShipValue)}
             handleQuantityChange={handleChange(setSellQuantityValue)}
             handleSubmit={handleSubmit(
-              api.sellTradeGoods,
+              api.sellOrders.sellTradeGoods,
               {
                 shipId: sellShipValue,
                 good: sellGoodValue,
@@ -191,6 +197,7 @@ function Client() {
                 destination: flightPlanDestinationValue,
                 setCredits,
                 setMyShips,
+                setMarketLocation,
               },
             )}
           />
@@ -204,6 +211,7 @@ function Client() {
                 shipId: staticRouteShipValue,
                 setCredits,
                 setMyShips,
+                setMarketLocation,
               },
             )}
           />
@@ -225,6 +233,7 @@ function Client() {
                 destination: tradeDestinationValue,
                 setCredits,
                 setMyShips,
+                setMarketLocation,
               },
             )}
           />
@@ -233,7 +242,7 @@ function Client() {
             value={repayLoanValue}
             handleChange={handleChange(setRepayLoanValue)}
             handleSubmit={handleSubmit(
-              api.payOffYourLoan,
+              api.loans.payOffYourLoan,
               {
                 loan: loans.find((loan) => loan.id === repayLoanValue),
               },

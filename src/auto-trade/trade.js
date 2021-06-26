@@ -2,18 +2,18 @@ import api from '../api/api';
 import fly from './fly';
 
 const trade = function trade({
-  shipId, good, destination, setCredits, setMyShips,
+  shipId, good, destination, setCredits, setMyShips, setMarketLocation,
 }, toast) {
   return new Promise((resolve) => {
     // buy good
     let net = 0;
     let time;
-    api.placeANewPurchaseOrder({
+    api.purchaseOrders.placeANewPurchaseOrder({
       shipId, good, quantity: 25, setCredits, setMyShips,
     }, toast)
       .then((json) => {
         net -= json.order.total;
-        return api.placeANewPurchaseOrder({
+        return api.purchaseOrders.placeANewPurchaseOrder({
           shipId, good, quantity: 5, setCredits, setMyShips,
         }, toast);
       })
@@ -21,18 +21,18 @@ const trade = function trade({
       .then((json) => {
         net -= json.order.total;
         return fly({
-          shipId, destination, setCredits, setMyShips,
+          shipId, destination, setCredits, setMyShips, setMarketLocation,
         }, toast);
       })
       // sell good
       .then((json) => {
         net -= json.fuelExpenditure;
         time = json.flightPlan.timeRemainingInSeconds;
-        return api.sellTradeGoods({ shipId, good, quantity: 25 }, toast);
+        return api.sellOrders.sellTradeGoods({ shipId, good, quantity: 25 }, toast);
       })
       .then((json) => {
         net += json.order.total;
-        return api.sellTradeGoods({ shipId, good, quantity: 5 }, toast);
+        return api.sellOrders.sellTradeGoods({ shipId, good, quantity: 5 }, toast);
       })
       .then((json) => {
         net += json.order.total;

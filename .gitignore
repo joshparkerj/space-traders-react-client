@@ -24,3 +24,6 @@ yarn-error.log*
 
 # private information akshuaally
 src/api/space-traders-api-access-token.js
+
+# ephemeral details not part of the app
+game-notes*

@@ -15,7 +15,8 @@ const fetchWithRetry = function fetchWithRetry(fetchAddress, fetchOptions, secon
             .then((j) => {
               if (j && j.error && j.error.message === 'Quantity exceeds available cargo space on ship.') {
                 setTimeout(() => (
-                  resolve(fetchWithRetry(fetchAddress, fetchOptions, seconds + 1))
+                  fetchWithRetry(fetchAddress, fetchOptions, seconds + 1)
+                    .then((res) => resolve(res))
                 ), 1000 * seconds);
               } else {
                 reject(j.error);
