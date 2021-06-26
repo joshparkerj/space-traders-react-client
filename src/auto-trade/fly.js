@@ -13,8 +13,12 @@ const fly = function fly({
           api.placeANewPurchaseOrder({
             shipId, good: 'FUEL', quantity: fuelConsumed, setCredits, setMyShips,
           }, toast)
-            .then(() => toast.info('auto-refueled'))
-            .then(() => resolve());
+            .then((fuelPurchase) => {
+              const fuelExpenditure = fuelPurchase.order.total;
+              toast.info('auto-refueled');
+              return { ...json, fuelExpenditure };
+            })
+            .then((data) => resolve(data));
         }, 1000 * json.flightPlan.timeRemainingInSeconds);
       });
   });

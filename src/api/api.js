@@ -78,7 +78,7 @@ const purchaseAShip = function purchaseAShip(
       setMyShips((s) => [...s, json.ship]);
       setCredits(json.user.credits);
     })
-    .catch((err) => toast.error(err));
+    .catch((err) => toast.error(err.message));
 };
 
 const placeANewPurchaseOrder = function placeANewPurchaseOrder(
@@ -99,7 +99,7 @@ const placeANewPurchaseOrder = function placeANewPurchaseOrder(
         if (err.message === 'Quantity purchased exceeds ship\'s loading speed.') {
           toast.error(`${err.message}\nMax loading speed is ${err.data.loadingSpeed}`);
         } else {
-          toast.error(err);
+          toast.error(err.message);
         }
 
         reject(err);
@@ -113,7 +113,7 @@ const takeOutALoan = function takeOutALoan({ type, setLoans, setCredits }, toast
       setLoans((l) => [...l, json.loan]);
       setCredits(json.credits);
     })
-    .catch((err) => toast.error(err));
+    .catch((err) => toast.error(err.message));
 };
 
 const createFlightPlan = function createFlightPlan({ shipId, destination }, toast) {
@@ -138,7 +138,7 @@ const createFlightPlan = function createFlightPlan({ shipId, destination }, toas
         resolve(json);
       })
       .catch((err) => {
-        toast.error(err);
+        toast.error(err.message);
         reject(err);
       });
   });
@@ -155,6 +155,8 @@ const sellTradeGoods = function sellTradeGoods({ shipId, good, quantity }, toast
       .catch((err) => {
         if (err.message === 'Quantity purchased exceeds ship\'s loading speed.') {
           toast.error(`${err.message}\nMax loading speed is ${err.data.loadingSpeed}`);
+        } else if (err.message) {
+          toast.error(err.message);
         } else {
           toast.error(err);
         }
@@ -170,7 +172,7 @@ const payOffYourLoan = function payOffYourLoan({ loan }, toast) {
         resolve(json);
       })
       .catch((err) => {
-        toast.error(err);
+        toast.error(err.message);
       });
   });
 };
