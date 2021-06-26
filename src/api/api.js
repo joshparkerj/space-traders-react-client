@@ -76,7 +76,7 @@ const purchaseAShip = function purchaseAShip(
   fetchPost(`${root}my/ships?token=${token}&location=${location}&type=${type}`)
     .then((json) => {
       setMyShips((s) => [...s, json.ship]);
-      setCredits(json.user.credits);
+      setCredits(json.credits);
     })
     .catch((err) => toast.error(err.message));
 };
