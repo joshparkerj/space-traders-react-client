@@ -1,8 +1,8 @@
 import fetchWithRetry from './fetch-with-retry';
 
-const fetchPost = function fetchPost(fetchAddress) {
+const fetchPost = function fetchPost(fetchAddress, method) {
   return new Promise((resolve, reject) => {
-    fetchWithRetry(fetchAddress, { method: 'POST' })
+    fetchWithRetry(fetchAddress, { method: method || 'POST' })
       .then((r) => r.json())
       .then((json) => {
         resolve(json);

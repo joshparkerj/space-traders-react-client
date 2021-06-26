@@ -22,7 +22,6 @@ const trade = function trade({
       .then(() => api.sellTradeGoods({ shipId, good, quantity: 25 }, toast))
       .then(() => api.sellTradeGoods({ shipId, good, quantity: 5 }, toast))
       .then(() => {
-        console.log('ready to resolve trade');
         resolve();
       });
   });

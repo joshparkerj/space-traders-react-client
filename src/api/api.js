@@ -120,7 +120,6 @@ const createFlightPlan = function createFlightPlan({ shipId, destination }, toas
   return new Promise((resolve, reject) => {
     fetchPost(`${root}my/flight-plans?token=${token}&shipId=${shipId}&destination=${destination}`)
       .then((json) => {
-        console.log('fetch post has resolved');
         const {
           destination: flightPlanDestination, fuelConsumed, timeRemainingInSeconds,
         } = json.flightPlan;
@@ -146,18 +145,34 @@ const createFlightPlan = function createFlightPlan({ shipId, destination }, toas
 };
 
 const sellTradeGoods = function sellTradeGoods({ shipId, good, quantity }, toast) {
-  fetchPost(`${root}my/sell-orders?token=${token}&shipId=${shipId}&good=${good}&quantity=${quantity}`)
-    .then((json) => {
-      const { good: orderGood, total, quantity: orderQuantity } = json.order;
-      toast.success(`sold ${orderQuantity} ${orderGood} for ${total}`);
-    })
-    .catch((err) => {
-      if (err.message === 'Quantity purchased exceeds ship\'s loading speed.') {
-        toast.error(`${err.message}\nMax loading speed is ${err.data.loadingSpeed}`);
-      } else {
+  return new Promise((resolve) => {
+    fetchPost(`${root}my/sell-orders?token=${token}&shipId=${shipId}&good=${good}&quantity=${quantity}`)
+      .then((json) => {
+        const { good: orderGood, total, quantity: orderQuantity } = json.order;
+        toast.success(`sold ${orderQuantity} ${orderGood} for ${total}`);
+        resolve(json);
+      })
+      .catch((err) => {
+        if (err.message === 'Quantity purchased exceeds ship\'s loading speed.') {
+          toast.error(`${err.message}\nMax loading speed is ${err.data.loadingSpeed}`);
+        } else {
+          toast.error(err);
+        }
+      });
+  });
+};
+
+const payOffYourLoan = function payOffYourLoan({ loan }, toast) {
+  return new Promise((resolve) => {
+    fetchPost(`${root}my/loans/${loan.id}?token=${token}&loanId=${loan.id}&type=${loan.type}`, 'PUT')
+      .then((json) => {
+        toast.success('loan repaid!');
+        resolve(json);
+      })
+      .catch((err) => {
         toast.error(err);
-      }
-    });
+      });
+  });
 };
 
 const api = {
@@ -176,6 +191,7 @@ const api = {
   createFlightPlan,
   getSystemFlightPlans,
   sellTradeGoods,
+  payOffYourLoan,
 };
 
 export default api;

@@ -37,7 +37,7 @@
 
 table.goods,
 table.flight-plans,
-/* table.ships, */
+table.ships,
 table.loan-types {
   display: none;
 }

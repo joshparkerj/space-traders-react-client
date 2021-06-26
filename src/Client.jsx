@@ -15,6 +15,7 @@ import SellTradeGoods from './forms/SellTradeGoods';
 import CreateFlightPlan from './forms/CreateFlightPlan';
 import AutoRunStaticRoute from './forms/AutoRunStaticRoute';
 import Trade from './forms/Trade';
+import PayOffYourLoan from './forms/PayOffYourLoan';
 
 import api from './api/api';
 
@@ -49,6 +50,7 @@ function Client() {
   const [tradeShipValue, setTradeShipValue] = useState('');
   const [tradeGoodValue, setTradeGoodValue] = useState('');
   const [tradeDestinationValue, setTradeDestinationValue] = useState('');
+  const [repayLoanValue, setRepayLoanValue] = useState('');
   const [gameStatus, setGameStatus] = useState('');
 
   useEffect(() => {
@@ -223,6 +225,17 @@ function Client() {
                 destination: tradeDestinationValue,
                 setCredits,
                 setMyShips,
+              },
+            )}
+          />
+          <PayOffYourLoan
+            loans={loans}
+            value={repayLoanValue}
+            handleChange={handleChange(setRepayLoanValue)}
+            handleSubmit={handleSubmit(
+              api.payOffYourLoan,
+              {
+                loan: loans.find((loan) => loan.id === repayLoanValue),
               },
             )}
           />
