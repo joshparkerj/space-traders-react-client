@@ -47,11 +47,15 @@ const getTypesOfGoods = function getTypesOfGoods(setter) {
 };
 
 const getLocationMarketplaces = function getLocationsMarketplaces(location, setter) {
-  fetchData(`${root}locations/${location}/marketplace?token=${token}`, setter, 'marketplace', 'symbol');
+  return new Promise((resolve) => {
+    resolve(fetchData(`${root}locations/${location}/marketplace?token=${token}`, setter, 'marketplace', 'symbol'));
+  });
 };
 
 const getSystemLocations = function getSystemLocations(system, setter) {
-  fetchData(`${root}systems/${system}/locations?token=${token}`, setter, 'locations', 'symbol');
+  return new Promise((resolve) => {
+    resolve(fetchData(`${root}systems/${system}/locations?token=${token}`, setter, 'locations', 'symbol'));
+  });
 };
 
 const getTypesOfLoans = function getTypesOfLoans(setter) {
@@ -67,12 +71,12 @@ const purchaseAShip = function purchaseAShip(
     location, type, setMyShips, setCredits,
   }, toast,
 ) {
-  fetchPost(`${root}my/ships?token=${token}&location=${location}&type=${type}`,
-    (json) => {
+  fetchPost(`${root}my/ships?token=${token}&location=${location}&type=${type}`)
+    .then((json) => {
       setMyShips((s) => [...s, json.ship]);
       setCredits(json.user.credits);
-    },
-    (err) => toast.error(err));
+    })
+    .catch((err) => toast.error(err));
 };
 
 const placeANewPurchaseOrder = function placeANewPurchaseOrder(
@@ -80,13 +84,13 @@ const placeANewPurchaseOrder = function placeANewPurchaseOrder(
     shipId, good, quantity, setCredits, setMyShips,
   }, toast,
 ) {
-  fetchPost(`${root}my/purchase-orders?token=${token}&shipId=${shipId}&good=${good}&quantity=${quantity}`,
-    (json) => {
+  fetchPost(`${root}my/purchase-orders?token=${token}&shipId=${shipId}&good=${good}&quantity=${quantity}`)
+    .then((json) => {
       setCredits(json.credits);
       setMyShips((s) => [...s.map((ship) => (ship.id === json.ship.id ? json.ship : ship))]);
       toast.success('purchase success!');
-    },
-    (err) => {
+    })
+    .catch((err) => {
       if (err.message === 'Quantity purchased exceeds ship\'s loading speed.') {
         toast.error(`${err.message}\nMax loading speed is ${err.data.loadingSpeed}`);
       } else {
@@ -96,17 +100,41 @@ const placeANewPurchaseOrder = function placeANewPurchaseOrder(
 };
 
 const takeOutALoan = function takeOutALoan({ type, setLoans, setCredits }, toast) {
-  fetchPost(`${root}my/loans?token=${token}&type=${type}`, (json) => {
-    setLoans((l) => [...l, json.loan]);
-    setCredits(json.credits);
-  }, (err) => toast.error(err));
+  fetchPost(`${root}my/loans?token=${token}&type=${type}`)
+    .then((json) => {
+      setLoans((l) => [...l, json.loan]);
+      setCredits(json.credits);
+    })
+    .catch((err) => toast.error(err));
 };
 
 const createFlightPlan = function createFlightPlan({ shipId, destination }, toast) {
-  fetchPost(`${root}my/flight-plans?token=${token}&shipId=${shipId}&destination=${destination}`, (json) => {
-    console.log(json);
-    toast.success('flight plan created!');
-  }, (err) => toast.error(err));
+  return new Promise((resolve, reject) => {
+    fetchPost(`${root}my/flight-plans?token=${token}&shipId=${shipId}&destination=${destination}`)
+      .then((json) => {
+        console.log('fetch post has resolved');
+        toast.success('flight plan created!');
+        resolve(json);
+      })
+      .catch((err) => {
+        toast.error(err);
+        reject(err);
+      });
+  });
+};
+
+const sellTradeGoods = function sellTradeGoods({ shipId, good, quantity }, toast) {
+  fetchPost(`${root}my/sell-orders?token=${token}&shipId=${shipId}&good=${good}&quantity=${quantity}`)
+    .then(() => {
+      toast.success('trade goods sold!');
+    })
+    .catch((err) => {
+      if (err.message === 'Quantity purchased exceeds ship\'s loading speed.') {
+        toast.error(`${err.message}\nMax loading speed is ${err.data.loadingSpeed}`);
+      } else {
+        toast.error(err);
+      }
+    });
 };
 
 const api = {
@@ -124,6 +152,7 @@ const api = {
   takeOutALoan,
   createFlightPlan,
   getSystemFlightPlans,
+  sellTradeGoods,
 };
 
 export default api;

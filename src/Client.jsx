@@ -10,12 +10,15 @@ import Goods from './data/Goods';
 import Market from './data/Market';
 import Locations from './data/Locations';
 import FlightPlans from './data/FlightPlans';
+// import WhereToSell from './data/WhereToSell';
 import TakeOutALoan from './forms/TakeOutALoan';
 import PurchaseAShip from './forms/PurchaseAShip';
 import PlaceANewPurchaseOrder from './forms/PlaceANewPurchaseOrder';
+import SellTradeGoods from './forms/SellTradeGoods';
 import CreateFlightPlan from './forms/CreateFlightPlan';
 
 import api from './api/api';
+import fly from './auto-trade/fly';
 
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -36,6 +39,9 @@ function Client() {
   const [purchaseOrderGoodsValue, setPurchaseOrderGoodsValue] = useState('');
   const [purchaseOrderShipsValue, setPurchaseOrderShipsValue] = useState('');
   const [purchaseOrderQuantityValue, setPurchaseOrderQuantityValue] = useState('0');
+  const [sellGoodValue, setSellGoodValue] = useState('');
+  const [sellShipValue, setSellShipValue] = useState('');
+  const [sellQuantityValue, setSellQuantityValue] = useState('0');
   const [flightPlanShipsValue, setFlightPlanShipsValue] = useState('');
   const [flightPlanDestinationValue, setFlightPlanDestinationValue] = useState('');
   const [gameStatus, setGameStatus] = useState('');
@@ -55,10 +61,18 @@ function Client() {
 
   useEffect(() => {
     if (myShips[0] && myShips[0].location) {
-      const { system } = myShips[0].location.match(/^(?<system>[^-]*).*$/).groups;
+      const { location } = myShips[0];
+      const { system } = location.match(/^(?<system>[^-]*).*$/).groups;
       api.getLocationMarketplaces(myShips[0].location, setMarketGoods);
       api.getSystemLocations(system, setLocations);
       api.getSystemFlightPlans(system, setFlightPlans);
+      // if (myShips[0].cargo) {
+      //   const { good } = myShips[0].cargo.filter((e) => e.good !== 'FUEL')[0];
+      //   if (good) {
+      //     whereToSell(good, location)
+      //       .then((places) => setPlacesToSell(places));
+      //   }
+      // }
     }
   }, [myShips]);
 
@@ -144,6 +158,26 @@ function Client() {
               },
             )}
           />
+          <SellTradeGoods
+            goods={goods}
+            ships={myShips}
+            goodsValue={sellGoodValue}
+            shipsValue={sellShipValue}
+            quantityValue={sellQuantityValue}
+            handleGoodsChange={handleChange(setSellGoodValue)}
+            handleShipChange={handleChange(setSellShipValue)}
+            handleQuantityChange={handleChange(setSellQuantityValue)}
+            handleSubmit={handleSubmit(
+              api.sellTradeGoods,
+              {
+                shipId: sellShipValue,
+                good: sellGoodValue,
+                quantity: sellQuantityValue,
+                setCredits,
+                setMyShips,
+              },
+            )}
+          />
           <CreateFlightPlan
             ships={myShips}
             shipsValue={flightPlanShipsValue}
@@ -152,7 +186,7 @@ function Client() {
             handleShipChange={handleChange(setFlightPlanShipsValue)}
             handleDestinationChange={handleChange(setFlightPlanDestinationValue)}
             handleSubmit={handleSubmit(
-              api.createFlightPlan,
+              fly,
               { shipId: flightPlanShipsValue, destination: flightPlanDestinationValue },
             )}
           />
