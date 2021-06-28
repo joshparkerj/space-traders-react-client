@@ -45,7 +45,7 @@ const trade = function trade({
       })
       .then(() => {
         const time = Date.now() - startTime;
-        toast.info(`trade profit ${60000 * (net / time)} per minute`);
+        toast.info(`trade profit ${Math.round(1000 * (net / time))} per second`);
         resolve({ net, time });
       });
   });

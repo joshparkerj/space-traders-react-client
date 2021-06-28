@@ -1,4 +1,4 @@
-const fetchWithRetry = function fetchWithRetry(fetchAddress, fetchOptions, seconds = 1) {
+const fetchWithRetry = function fetchWithRetry(fetchAddress, fetchOptions, seconds = 2) {
   const corsOptions = { ...fetchOptions, mode: 'cors' };
   return new Promise((resolve, reject) => {
     fetch(fetchAddress, corsOptions)
