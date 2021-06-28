@@ -1,7 +1,7 @@
 import route from './route';
 
 const staticRoute = function staticRoute({
-  name, shipId, setCredits, setMyShips, setMarketLocation,
+  name, ship, setCredits, setMyShips, setMarketLocation,
 }, toast) {
   const staticRoutes = {
     'Omicron Eridani': [
@@ -39,7 +39,7 @@ const staticRoute = function staticRoute({
   };
 
   route({
-    shipId, nodes: staticRoutes[name], setCredits, setMyShips, setMarketLocation,
+    ship, nodes: staticRoutes[name], setCredits, setMyShips, setMarketLocation,
   }, toast);
 };
 

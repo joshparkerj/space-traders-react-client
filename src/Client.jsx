@@ -210,7 +210,7 @@ function Client() {
             handleSubmit={handleSubmit(
               fly,
               {
-                shipId: flightPlanShipsValue,
+                ship: myShips.find((ship) => ship.id === flightPlanShipsValue),
                 destination: flightPlanDestinationValue,
                 setCredits,
                 setMyShips,
@@ -227,7 +227,7 @@ function Client() {
             handleSubmit={handleSubmit(
               staticRoute,
               {
-                shipId: staticRouteShipValue,
+                ship: myShips.find((ship) => ship.id === staticRouteShipValue),
                 name: staticRouteName,
                 setCredits,
                 setMyShips,
@@ -248,7 +248,7 @@ function Client() {
             handleSubmit={handleSubmit(
               trade,
               {
-                shipId: tradeShipValue,
+                ship: myShips.find((ship) => ship.id === tradeShipValue),
                 good: tradeGoodValue,
                 size: tradeGoodValue
                   ? goods.find((g) => g.symbol === tradeGoodValue).volumePerUnit

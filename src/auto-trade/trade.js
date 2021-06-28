@@ -2,11 +2,9 @@ import api from '../api/api';
 import fly from './fly';
 
 const trade = function trade({
-  shipId,
+  ship,
   good,
   size,
-  spaceAvailable,
-  loadingSpeed,
   destination,
   setCredits,
   setMyShips,
@@ -15,6 +13,8 @@ const trade = function trade({
   return new Promise((resolve) => {
     let net = 0;
     const startTime = Date.now();
+    const spaceAvailable = ship.maxCargo - 20;
+    const { loadingSpeed } = ship;
     const units = spaceAvailable / size;
     const loads = [];
     for (let count = 0; count <= units; count += loadingSpeed) {
@@ -23,19 +23,19 @@ const trade = function trade({
 
     Promise.all(loads.map((load) => (
       api.purchaseOrders.placeANewPurchaseOrder({
-        shipId, good, quantity: load, setCredits, setMyShips,
+        shipId: ship.id, good, quantity: load, setCredits, setMyShips,
       }, toast).then((json) => {
         net -= json.order.total;
         return json;
       })
     )))
       .then(() => fly({
-        shipId, destination, setCredits, setMyShips, setMarketLocation,
+        ship, destination, setCredits, setMyShips, setMarketLocation,
       }, toast))
       .then((json) => {
         net -= json.fuelExpenditure;
         return Promise.all(loads.map((load) => (
-          api.sellOrders.sellTradeGoods({ shipId, good, quantity: load }, toast)
+          api.sellOrders.sellTradeGoods({ shipId: ship.id, good, quantity: load }, toast)
             .then(((j) => {
               net += j.order.total;
             }))
