@@ -9,6 +9,7 @@ import sellOrders from './sell-orders';
 import ships from './ships';
 import systems from './systems';
 import types from './types';
+import warpJump from './warp-jump';
 
 const api = {
   account,
@@ -22,6 +23,7 @@ const api = {
   ships,
   systems,
   types,
+  warpJump,
 };
 
 export default api;

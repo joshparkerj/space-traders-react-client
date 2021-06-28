@@ -16,6 +16,8 @@ import CreateFlightPlan from './forms/CreateFlightPlan';
 import AutoRunStaticRoute from './forms/AutoRunStaticRoute';
 import Trade from './forms/Trade';
 import PayOffYourLoan from './forms/PayOffYourLoan';
+import CheckSystem from './forms/CheckSystem';
+import AttemptWarpJump from './forms/AttemptWarpJump';
 
 import api from './api/api';
 
@@ -51,16 +53,19 @@ function Client() {
   const [tradeGoodValue, setTradeGoodValue] = useState('');
   const [tradeDestinationValue, setTradeDestinationValue] = useState('');
   const [repayLoanValue, setRepayLoanValue] = useState('');
+  const [checkSystemValue, setCheckSystemValue] = useState('');
+  const [warpShipValue, setWarpShipValue] = useState('');
   const [gameStatus, setGameStatus] = useState('');
   const [marketLocation, setMarketLocation] = useState('');
-  const [currentSystem, setCurrentSystem] = useState('');
+  const [currentSystems, setCurrentSystems] = useState(new Set());
 
   useEffect(() => {
     api.types.getTypesOfLoans(setLoanTypes);
   }, [loans]);
 
   useEffect(() => {
-    api.account.getMyAccount(setUsers);
+    api.account.getMyAccount(setUsers)
+      .then(({ user }) => setCredits(user.credits));
     api.loans.getMyLoans(setLoans);
     api.systems.getSystemShipListings(setShips);
     api.game.getGameStatus(setGameStatus);
@@ -69,20 +74,31 @@ function Client() {
   }, []);
 
   useEffect(() => {
-    if (myShips[0] && myShips[0].location) {
-      const { location } = myShips[0];
-      const { system } = location.match(/^(?<system>[^-]*).*$/).groups;
-      setCurrentSystem(system);
+    if (myShips.length > 0) {
+      const systems = new Set(myShips.map((ship) => ship.location && ship.location.match(/^(?<system>[^-]*)/).groups.system));
+      if ([...systems]
+        .filter((sy) => sy !== undefined)
+        .reduce((acc, e) => acc || !currentSystems.has(e), false)) {
+        setCurrentSystems(systems);
+      }
     }
   }, [myShips]);
 
   useEffect(() => {
-    api.systems.getSystemLocations(currentSystem, setLocations);
-  }, [currentSystem]);
+    Promise.all([...currentSystems].map((sy) => api.systems.getSystemLocations(sy, setLocations)));
+  }, [currentSystems]);
 
   useEffect(() => {
     if (marketLocation) {
-      api.locations.getLocationMarketplaces(marketLocation, setMarketGoods);
+      api.locations.getLocationMarketplaces(marketLocation, (newMarketGoods) => {
+        const fuel = newMarketGoods.find((good) => good.symbol === 'FUEL');
+        const stuff = newMarketGoods.filter((good) => good.symbol !== 'FUEL').sort(({ symbol: a }, { symbol: b }) => (a > b ? 1 : -1));
+        if (fuel) {
+          setMarketGoods([fuel, ...stuff]);
+        } else {
+          setMarketGoods(stuff);
+        }
+      });
     }
   }, [marketLocation]);
 
@@ -108,20 +124,13 @@ function Client() {
       </header>
       <main>
         <section className="data">
-          <div className="credits">
-            <span>credits:</span>
-            <span>{credits}</span>
-          </div>
           <h2>data</h2>
-          <Users users={users} />
-          {/* <LoanTypes loans={loanTypes} /> */}
+          <Users users={users} credits={credits} />
           <Loans loans={loans} />
           <Ships ships={ships} />
           <MyShips myShips={myShips} />
-          {/* <Goods goods={goods} /> */}
           <Market goods={marketGoods} />
           <Locations locations={locations} />
-          {/* <FlightPlans flightPlans={flightPlans} /> */}
         </section>
         <section className="forms">
           <h2>forms</h2>
@@ -163,6 +172,7 @@ function Client() {
                 shipId: purchaseOrderShipsValue,
                 good: purchaseOrderGoodsValue,
                 quantity: purchaseOrderQuantityValue,
+                toastSuccess: true,
                 setCredits,
                 setMyShips,
               },
@@ -183,6 +193,7 @@ function Client() {
                 shipId: sellShipValue,
                 good: sellGoodValue,
                 quantity: sellQuantityValue,
+                toastSuccess: true,
                 setCredits,
                 setMyShips,
               },
@@ -250,6 +261,27 @@ function Client() {
               api.loans.payOffYourLoan,
               {
                 loan: loans.find((loan) => loan.id === repayLoanValue),
+              },
+            )}
+          />
+          <CheckSystem
+            value={checkSystemValue}
+            handleChange={handleChange(setCheckSystemValue)}
+            handleSubmit={handleSubmit(
+              api.systems.getSystem,
+              {
+                system: checkSystemValue,
+              },
+            )}
+          />
+          <AttemptWarpJump
+            ships={myShips}
+            value={warpShipValue}
+            handleChange={handleChange(setWarpShipValue)}
+            handleSubmit={handleSubmit(
+              api.warpJump.attemptAWarpJump,
+              {
+                shipId: warpShipValue,
               },
             )}
           />

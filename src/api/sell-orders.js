@@ -4,12 +4,17 @@ import fetchPost from './fetch-post';
 
 // https://api.spacetraders.io/#api-sell_orders
 
-const sellTradeGoods = function sellTradeGoods({ shipId, good, quantity }, toast) {
+const sellTradeGoods = function sellTradeGoods({
+  shipId, good, quantity, toastSuccess,
+}, toast) {
   return new Promise((resolve) => {
     fetchPost(`${root}my/sell-orders?token=${token}&shipId=${shipId}&good=${good}&quantity=${quantity}`)
       .then((json) => {
-        const { good: orderGood, total, quantity: orderQuantity } = json.order;
-        toast.success(`sold ${orderQuantity} ${orderGood} for ${total}`);
+        if (toastSuccess) {
+          const { good: orderGood, total, quantity: orderQuantity } = json.order;
+          toast.success(`sold ${orderQuantity} ${orderGood} for ${total}`);
+        }
+
         resolve(json);
       })
       .catch((err) => {

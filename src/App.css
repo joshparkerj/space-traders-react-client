@@ -16,20 +16,21 @@ main {
   grid-template-columns: 2fr 1fr;
 }
 
-table.loans,
-table.goods,
-table.flight-plans,
-table.ships,
-table.loan-types,
-table.locations {
-  display: none;
-}
-
 section, table, form {
   border: 1px solid silver;
   border-radius: 10px;
   padding: 3%;
   margin: 10px;
+}
+
+tbody.hidden {
+  display: none;
+}
+
+table button,
+table caption {
+  display: block;
+  margin: auto;
 }
 
 table {
@@ -54,4 +55,9 @@ th {
 tr {
   margin: 0;
   padding: 10px;
+}
+
+.Toastify__toast--default {
+  font-weight: bold;
+  text-shadow: 1px 1px 2px chartreuse, 2px 2px 4px seagreen;
 }

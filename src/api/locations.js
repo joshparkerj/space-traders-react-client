@@ -16,7 +16,7 @@ const getLocation = function getLocation(location, setter) {
 const getLocationMarketplaces = function getLocationsMarketplaces(location, setter) {
   return new Promise((resolve, reject) => {
     fetchData(`${root}locations/${location}/marketplace?token=${token}`, setter, 'marketplace')
-      .then(() => resolve())
+      .then((r) => resolve(r))
       .catch((err) => reject(err));
   });
 };

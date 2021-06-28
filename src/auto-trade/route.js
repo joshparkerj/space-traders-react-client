@@ -11,7 +11,7 @@ const route = function route({
       .then(({ ship }) => {
         i = 1 + nodes.findIndex((node) => node[0] === ship.location);
         i %= nodes.length;
-        const fuelLevel = ship.cargo.find((good) => good.good === 'FUEL').quantity;
+        const fuelLevel = ship.cargo.find((good) => good.good === 'FUEL')?.quantity || 0;
         cargo = ship.cargo.filter((good) => good.good !== 'FUEL').reduce((acc, e) => {
           const loads = [];
           for (let count = 0; count <= e.quantity; count += 25) {
@@ -21,6 +21,7 @@ const route = function route({
           return acc.concat(loads);
         }, []);
 
+        toast(`beginning route by flying to ${nodes[i][0]} with ${nodes[i][1]}`);
         if (fuelLevel < 20) {
           return api.purchaseOrders.placeANewPurchaseOrder({
             shipId, good: 'FUEL', quantity: 20 - fuelLevel, setCredits, setMyShips,

@@ -15,7 +15,6 @@ const fly = function fly({
           }, toast)
             .then((fuelPurchase) => {
               const fuelExpenditure = fuelPurchase.order.total;
-              toast.info('auto-refueled');
               setMarketLocation(fuelPurchase.ship.location);
               return { ...json, fuelExpenditure };
             })

@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import User from './User';
 import Data from './Data';
 
-const Users = function Users({ users }) {
+const Users = function Users({ users, credits }) {
   return (
     <Data
-      name="users"
+      name=""
       fields={['name', 'age', 'ships', 'structures', 'credits']}
-      records={users.map((e) => ({ ...e, id: e.username }))}
+      records={users.map((e) => ({ ...e, id: e.username, credits }))}
       RowComponent={User}
     />
   );
@@ -17,10 +17,12 @@ const Users = function Users({ users }) {
 
 Users.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
+  credits: PropTypes.number,
 };
 
 Users.defaultProps = {
   users: [],
+  credits: null,
 };
 
 export default Users;

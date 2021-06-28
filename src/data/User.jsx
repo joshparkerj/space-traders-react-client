@@ -24,7 +24,7 @@ User.propTypes = {
     joinedAt: PropTypes.string.isRequired,
     shipCount: PropTypes.number.isRequired,
     structureCount: PropTypes.number.isRequired,
-    credits: PropTypes.number.isRequired,
+    credits: PropTypes.number,
   }).isRequired,
 };
 

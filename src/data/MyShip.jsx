@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Datum from './Datum';
 
 const MyShip = function MyShip({ record: myShip }) {
-  const fuel = myShip.cargo.find((good) => good.good === 'FUEL').totalVolume;
+  const fuel = myShip.cargo.find((good) => good.good === 'FUEL')?.totalVolume || 0;
   return (
     <Datum
       name="ship"

@@ -11,9 +11,13 @@ const fetchData = function fetchData(fetchAddress, setter, arrayName, idField) {
       getId = idField;
     } else if (idField === undefined) {
       fetchWithRetry(fetchAddress)
-        .then((r) => r.json())
+        .then((r) => (
+          r.json()
+        ))
         .then((jsonResponse) => { setter(jsonResponse[arrayName]); resolve(jsonResponse); })
-        .catch((err) => reject(err));
+        .catch((err) => {
+          reject(err);
+        });
     } else {
       throw new Error('idField must be string or function');
     }

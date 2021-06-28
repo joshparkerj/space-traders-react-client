@@ -7,7 +7,7 @@ import fetchWithRetry from './fetch-with-retry';
 
 const getSystemShipListings = function getSystemShipListings(setter) {
   // TODO: use fetchData function here (it will need to be updated)
-  fetchWithRetry(`${root}systems/OE/ship-listings?token=${token}&class=MK-I`)
+  fetchWithRetry(`${root}systems/OE/ship-listings?token=${token}`)
     .then((r) => r.json())
     .then(({ shipListings }) => {
       const reducedListings = shipListings.reduce((acc, e) => {
@@ -17,7 +17,7 @@ const getSystemShipListings = function getSystemShipListings(setter) {
       setter((s) => (
         [
           ...s,
-          ...reducedListings.filter((ship) => (
+          ...[...reducedListings].sort((a, b) => a.price - b.price).filter((ship) => (
             !s.map((e) => e.type + e.location).includes(ship.type + ship.location)
           )),
         ]
@@ -33,16 +33,27 @@ const getSystemFlightPlans = function getSystemFlightPlans(systemSymbol, setter)
 
 const getSystemLocations = function getSystemLocations(system, setter) {
   return new Promise((resolve) => {
-    resolve(fetchData(`${root}systems/${system}/locations?token=${token}`, setter, 'locations', 'symbol'));
+    fetchData(`${root}systems/${system}/locations?token=${token}`, setter, 'locations', 'symbol')
+      .then((r) => resolve(r));
   });
 };
 
 // TODO: Get systems info
+const getSystem = function getSystem({ system }, toast) {
+  return new Promise((resolve) => {
+    fetchData(`${root}systems/${system}?token=${token}`, () => { }, 'system')
+      .then(({ system: sys }) => {
+        toast(`${sys.symbol} stands for the ${sys.name} system!`);
+        resolve(sys);
+      });
+  });
+};
 
 const systems = {
   getSystemShipListings,
   getSystemFlightPlans,
   getSystemLocations,
+  getSystem,
 };
 
 export default systems;

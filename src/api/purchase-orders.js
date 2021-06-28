@@ -6,7 +6,7 @@ import fetchPost from './fetch-post';
 
 const placeANewPurchaseOrder = function placeANewPurchaseOrder(
   {
-    shipId, good, quantity, setCredits, setMyShips,
+    shipId, good, quantity, setCredits, setMyShips, toastSuccess,
   }, toast,
 ) {
   return new Promise((resolve, reject) => {
@@ -14,8 +14,11 @@ const placeANewPurchaseOrder = function placeANewPurchaseOrder(
       .then((json) => {
         setCredits(json.credits);
         setMyShips((s) => [...s.map((ship) => (ship.id === json.ship.id ? json.ship : ship))]);
-        const { quantity: orderQuantity, good: orderGood, total } = json.order;
-        toast.success(`bought ${orderQuantity} ${orderGood} for ${total}`);
+        if (toastSuccess) {
+          const { quantity: orderQuantity, good: orderGood, total } = json.order;
+          toast.success(`bought ${orderQuantity} ${orderGood} for ${total}`);
+        }
+
         resolve(json);
       })
       .catch((err) => {
