@@ -14,14 +14,13 @@ const trade = function trade({
 }, toast) {
   return new Promise((resolve) => {
     let net = 0;
-    let time;
+    const startTime = Date.now();
     const units = spaceAvailable / size;
     const loads = [];
     for (let count = 0; count <= units; count += loadingSpeed) {
       loads.push(units - count >= loadingSpeed ? loadingSpeed : units - count);
     }
 
-    console.log(loads);
     Promise.all(loads.map((load) => (
       api.purchaseOrders.placeANewPurchaseOrder({
         shipId, good, quantity: load, setCredits, setMyShips,
@@ -35,17 +34,17 @@ const trade = function trade({
       }, toast))
       .then((json) => {
         net -= json.fuelExpenditure;
-        time = json.flightPlan.timeRemainingInSeconds;
-        return api.sellOrders.sellTradeGoods({ shipId, good, quantity: 25 }, toast);
+        return Promise.all(loads.map((load) => (
+          api.sellOrders.sellTradeGoods({ shipId, good, quantity: load }, toast)
+            .then(((j) => {
+              net += j.order.total;
+            }))
+        )));
       })
-      .then((json) => {
-        net += json.order.total;
-        return api.sellOrders.sellTradeGoods({ shipId, good, quantity: 5 }, toast);
-      })
-      .then((json) => {
-        net += json.order.total;
-        toast.info(`trade profit ${60 * (net / time)} per minute`);
-        resolve({ ...json, net, time });
+      .then(() => {
+        const time = Date.now() - startTime;
+        toast.info(`trade profit ${60000 * (net / time)} per minute`);
+        resolve({ net, time });
       });
   });
 };
