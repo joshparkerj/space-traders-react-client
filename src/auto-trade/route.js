@@ -67,6 +67,8 @@ const route = function route({
       shipId,
       good: nodes[i].good,
       size: nodes[i].size,
+      spaceAvailable,
+      loadingSpeed,
       destination: nodes[i].destination,
       setCredits,
       setMyShips,

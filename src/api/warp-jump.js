@@ -10,14 +10,16 @@ const attemptAWarpJump = function attemptAWarpJump({ shipId }, toast) {
           destination: warpJumpDestination, fuelConsumed, timeRemainingInSeconds,
         } = json.flightPlan;
         let time;
+        const seconds = timeRemainingInSeconds % 60;
         if (timeRemainingInSeconds >= 60) {
-          if (timeRemainingInSeconds % 60 > 0) {
-            time = `${Math.floor(timeRemainingInSeconds / 60)} minutes and ${timeRemainingInSeconds % 60} seconds`;
+          const minutes = Math.floor(timeRemainingInSeconds / 60);
+          if (seconds > 0) {
+            time = `${minutes} minute${minutes === 1 ? '' : 's'} and ${timeRemainingInSeconds % 60} second${seconds === 1 ? '' : 's'}`;
           } else {
-            time = `${timeRemainingInSeconds / 60} minutes`;
+            time = `${minutes} minute${minutes === 1 ? '' : 's'}`;
           }
         } else {
-          time = `${timeRemainingInSeconds} seconds`;
+          time = `${seconds} second${seconds === 1 ? '' : 's'}`;
         }
 
         toast.success(`warping to ${warpJumpDestination}. Will use ${fuelConsumed} fuel and arrive in ${time}`);
