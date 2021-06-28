@@ -21,11 +21,6 @@ const route = function route({
     }, []);
 
     toast(`beginning route by flying to ${nodes[i].destination} with ${nodes[i].good}`);
-    /*
-        Promise.all(cargo.map(({ good, quantity }) => api.sellOrders.sellTradeGoods({
-          shipId: ship.id, good, quantity, setCredits, setMyShips,
-        }, toast)))
-    */
     chainPromises(cargo.map(({ good, quantity }) => () => api.sellOrders.sellTradeGoods({
       shipId: ship.id, good, quantity, setCredits, setMyShips,
     }, toast)))

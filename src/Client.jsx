@@ -87,9 +87,6 @@ function Client() {
   }, [myShips]);
 
   useEffect(() => {
-    /*
-    Promise.all([...currentSystems].map((sy) => api.systems.getSystemLocations(sy, setLocations)));
-    */
     chainPromises([...currentSystems].map((sy) => () => (
       api.systems.getSystemLocations(sy, setLocations)
     )));

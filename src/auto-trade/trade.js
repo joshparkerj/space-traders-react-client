@@ -22,16 +22,6 @@ const trade = function trade({
       loads.push(units - count >= loadingSpeed ? loadingSpeed : units - count);
     }
 
-    /*
-    Promise.all(loads.map((load) => (
-      api.purchaseOrders.placeANewPurchaseOrder({
-        shipId: ship.id, good, quantity: load, setCredits, setMyShips,
-      }, toast).then((json) => {
-        net -= json.order.total;
-        return json;
-      })
-    )))
-    */
     chainPromises(loads.map((load) => () => (
       api.purchaseOrders.placeANewPurchaseOrder({
         shipId: ship.id, good, quantity: load, setCredits, setMyShips,
@@ -44,16 +34,6 @@ const trade = function trade({
       }, toast))
       .then((json) => {
         net -= json.fuelExpenditure;
-        /*
-        return Promise.all(loads.map((load) => (
-          api.sellOrders.sellTradeGoods({
-            shipId: ship.id, good, quantity: load, setCredits, setMyShips,
-          }, toast)
-            .then(((j) => {
-              net += j.order.total;
-            }))
-        )));
-        */
         return chainPromises(loads.map((load) => () => (
           api.sellOrders.sellTradeGoods({
             shipId: ship.id, good, quantity: load, setCredits, setMyShips,

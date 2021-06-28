@@ -44,20 +44,3 @@ const staticRoute = function staticRoute({
 };
 
 export default staticRoute;
-
-// I previously had the data shaped like this:
-
-// ['OE-PM-TR', 'CONSTRUCTION_MATERIALS'],
-// ['OE-PM', 'METALS'],
-// ['OE-UC-OB', 'DRONES'],
-// ['OE-KO', 'CHEMICALS'],
-// ['OE-NY', 'EXPLOSIVES'],
-// ['OE-UC-OB', 'RARE_METALS'],
-// ['OE-KO', 'CHEMICALS'],
-// ['OE-PM', 'CONSUMER_GOODS'],
-// ['OE-UC-OB', 'DRONES'],
-// ];
-
-// I used this pair of regular expressions to reshape it:
-// \['([^']+)', '([^']+)'\]
-// { destination: '$1', good: '$2', size: 1 }
