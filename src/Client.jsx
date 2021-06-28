@@ -246,6 +246,9 @@ function Client() {
               {
                 shipId: tradeShipValue,
                 good: tradeGoodValue,
+                size: goods.find((good) => good.symbol === tradeGoodValue).volumePerUnit,
+                spaceAvailable: myShips.find((ship) => ship.id === tradeShipValue).maxCargo - 20,
+                loadingSpeed: myShips.find((ship) => ship.id === tradeShipValue).loadingSpeed,
                 destination: tradeDestinationValue,
                 setCredits,
                 setMyShips,
