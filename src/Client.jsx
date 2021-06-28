@@ -25,6 +25,8 @@ import fly from './auto-trade/fly';
 import staticRoute from './auto-trade/static-route';
 import trade from './auto-trade/trade';
 
+import chainPromises from './util/chain-promises';
+
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -77,16 +79,20 @@ function Client() {
   useEffect(() => {
     if (myShips.length > 0) {
       const systems = new Set(myShips.map((ship) => ship.location && ship.location.match(/^(?<system>[^-]*)/).groups.system));
-      if ([...systems]
-        .filter((sy) => sy !== undefined)
-        .reduce((acc, e) => acc || !currentSystems.has(e), false)) {
-        setCurrentSystems(systems);
+      const sysArray = [...systems].filter((sy) => sy !== undefined);
+      if (sysArray.reduce((acc, e) => acc || !currentSystems.has(e), false)) {
+        setCurrentSystems(new Set(sysArray));
       }
     }
   }, [myShips]);
 
   useEffect(() => {
+    /*
     Promise.all([...currentSystems].map((sy) => api.systems.getSystemLocations(sy, setLocations)));
+    */
+    chainPromises([...currentSystems].map((sy) => () => (
+      api.systems.getSystemLocations(sy, setLocations)
+    )));
   }, [currentSystems]);
 
   useEffect(() => {

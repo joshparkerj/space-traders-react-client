@@ -1,5 +1,6 @@
 import trade from './trade';
 import api from '../api/api';
+import chainPromises from '../util/chain-promises';
 
 // TODO: add an option to stop a ship from continuing its loop at any time.
 const route = function route({
@@ -20,7 +21,12 @@ const route = function route({
     }, []);
 
     toast(`beginning route by flying to ${nodes[i].destination} with ${nodes[i].good}`);
-    Promise.all(cargo.map(({ good, quantity }) => api.sellOrders.sellTradeGoods({
+    /*
+        Promise.all(cargo.map(({ good, quantity }) => api.sellOrders.sellTradeGoods({
+          shipId: ship.id, good, quantity, setCredits, setMyShips,
+        }, toast)))
+    */
+    chainPromises(cargo.map(({ good, quantity }) => () => api.sellOrders.sellTradeGoods({
       shipId: ship.id, good, quantity, setCredits, setMyShips,
     }, toast)))
       .then(() => (fuelLevel < 20 ? api.purchaseOrders.placeANewPurchaseOrder({

@@ -1,4 +1,5 @@
 import api from '../api/api';
+import chainPromises from '../util/chain-promises';
 import fly from './fly';
 
 const trade = function trade({
@@ -21,6 +22,7 @@ const trade = function trade({
       loads.push(units - count >= loadingSpeed ? loadingSpeed : units - count);
     }
 
+    /*
     Promise.all(loads.map((load) => (
       api.purchaseOrders.placeANewPurchaseOrder({
         shipId: ship.id, good, quantity: load, setCredits, setMyShips,
@@ -29,11 +31,20 @@ const trade = function trade({
         return json;
       })
     )))
+    */
+    chainPromises(loads.map((load) => () => (
+      api.purchaseOrders.placeANewPurchaseOrder({
+        shipId: ship.id, good, quantity: load, setCredits, setMyShips,
+      }, toast).then(({ order }) => {
+        net -= order.total;
+      })
+    )))
       .then(() => fly({
         ship, destination, setCredits, setMyShips, setMarketLocation,
       }, toast))
       .then((json) => {
         net -= json.fuelExpenditure;
+        /*
         return Promise.all(loads.map((load) => (
           api.sellOrders.sellTradeGoods({
             shipId: ship.id, good, quantity: load, setCredits, setMyShips,
@@ -42,6 +53,14 @@ const trade = function trade({
               net += j.order.total;
             }))
         )));
+        */
+        return chainPromises(loads.map((load) => () => (
+          api.sellOrders.sellTradeGoods({
+            shipId: ship.id, good, quantity: load, setCredits, setMyShips,
+          }, toast)
+            .then(({ order }) => {
+              net += order.total;
+            }))));
       })
       .then(() => {
         const time = Date.now() - startTime;
