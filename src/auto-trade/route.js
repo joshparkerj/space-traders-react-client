@@ -21,7 +21,7 @@ const route = function route({
 
     toast(`beginning route by flying to ${nodes[i].destination} with ${nodes[i].good}`);
     Promise.all(cargo.map(({ good, quantity }) => api.sellOrders.sellTradeGoods({
-      shipId: ship.id, good, quantity,
+      shipId: ship.id, good, quantity, setCredits, setMyShips,
     }, toast)))
       .then(() => (fuelLevel < 20 ? api.purchaseOrders.placeANewPurchaseOrder({
         shipId: ship.id, good: 'FUEL', quantity: 20 - fuelLevel, setCredits, setMyShips,

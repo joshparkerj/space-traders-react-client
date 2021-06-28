@@ -35,7 +35,9 @@ const trade = function trade({
       .then((json) => {
         net -= json.fuelExpenditure;
         return Promise.all(loads.map((load) => (
-          api.sellOrders.sellTradeGoods({ shipId: ship.id, good, quantity: load }, toast)
+          api.sellOrders.sellTradeGoods({
+            shipId: ship.id, good, quantity: load, setCredits, setMyShips,
+          }, toast)
             .then(((j) => {
               net += j.order.total;
             }))
