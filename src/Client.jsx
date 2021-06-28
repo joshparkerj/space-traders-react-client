@@ -48,6 +48,7 @@ function Client() {
   const [sellQuantityValue, setSellQuantityValue] = useState('0');
   const [flightPlanShipsValue, setFlightPlanShipsValue] = useState('');
   const [flightPlanDestinationValue, setFlightPlanDestinationValue] = useState('');
+  const [staticRouteName, setStaticRouteName] = useState('');
   const [staticRouteShipValue, setStaticRouteShipValue] = useState('');
   const [tradeShipValue, setTradeShipValue] = useState('');
   const [tradeGoodValue, setTradeGoodValue] = useState('');
@@ -221,10 +222,13 @@ function Client() {
             ships={myShips}
             value={staticRouteShipValue}
             handleChange={handleChange(setStaticRouteShipValue)}
+            nameValue={staticRouteName}
+            handleNameChange={handleChange(setStaticRouteName)}
             handleSubmit={handleSubmit(
               staticRoute,
               {
                 shipId: staticRouteShipValue,
+                name: staticRouteName,
                 setCredits,
                 setMyShips,
                 setMarketLocation,
@@ -246,9 +250,15 @@ function Client() {
               {
                 shipId: tradeShipValue,
                 good: tradeGoodValue,
-                size: goods.find((good) => good.symbol === tradeGoodValue).volumePerUnit,
-                spaceAvailable: myShips.find((ship) => ship.id === tradeShipValue).maxCargo - 20,
-                loadingSpeed: myShips.find((ship) => ship.id === tradeShipValue).loadingSpeed,
+                size: tradeGoodValue
+                  ? goods.find((g) => g.symbol === tradeGoodValue).volumePerUnit
+                  : 1,
+                spaceAvailable: tradeShipValue
+                  ? myShips.find((ship) => ship.id === tradeShipValue).maxCargo - 20
+                  : 30,
+                loadingSpeed: tradeShipValue
+                  ? myShips.find((ship) => ship.id === tradeShipValue).loadingSpeed
+                  : 25,
                 destination: tradeDestinationValue,
                 setCredits,
                 setMyShips,
