@@ -21,7 +21,12 @@ const Data = function Data({
 
   return (
     <div className={name.replace(' ', '-')}>
-      <button type="button" onClick={() => setShow((prev) => !prev)}>{show ? 'hide' : 'show'}</button>
+      <button
+        type="button"
+        onClick={() => setShow((prev) => !prev)}
+      >
+        {show ? 'hide' : 'show'}
+      </button>
       <table className={name.replace(' ', '-')}>
         <caption>{name}</caption>
         <thead>

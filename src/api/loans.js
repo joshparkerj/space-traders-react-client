@@ -9,7 +9,8 @@ const getMyLoans = function getMyLoans(setter) {
 
 const payOffYourLoan = function payOffYourLoan({ loan }, toast) {
   return new Promise((resolve) => {
-    fetchPost(`${root}my/loans/${loan.id}?token=${token}&loanId=${loan.id}&type=${loan.type}`, 'PUT')
+    const { id, type } = loan;
+    fetchPost(`${root}my/loans/${id}?token=${token}&loanId=${id}&type=${type}`, 'PUT')
       .then((json) => {
         toast.success('loan repaid!');
         resolve(json);

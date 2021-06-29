@@ -6,14 +6,19 @@ const fly = function fly({
   const getSystem = (sym) => sym.match(/^[^-]+/)[0];
 
   const flyWithWarp = function flyWithWarp({
-    ship: fwws, destination: fwwd, setCredits: fwwsc, setMyShips: fwwsms, setMarketLocation: fwwsml,
+    ship: fwws,
+    destination: fwwd,
+    setCredits: fwwsc,
+    setMyShips: fwwsms,
+    setMarketLocation: fwwsml,
   }, fwwToast) {
     return new Promise((resolve) => {
       const startSys = getSystem(fwws.location);
       const endSys = getSystem(destination);
       const proposedWormhole = `${startSys}-W-${endSys}`;
       const otherSideWormhole = `${endSys}-W-${startSys}`;
-      fwwToast.warning(`Trying to fly to ${proposedWormhole}. Only one jump is currently supported.`);
+      fwwToast.warning(`Trying to fly to ${proposedWormhole}. `
+        + 'Only one jump is currently supported.');
       fly({
         ship: fwws,
         destination: proposedWormhole,

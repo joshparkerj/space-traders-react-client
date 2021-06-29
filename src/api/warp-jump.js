@@ -11,7 +11,9 @@ const attemptAWarpJump = function attemptAWarpJump({ shipId }, toast) {
           destination: warpJumpDestination, fuelConsumed, timeRemainingInSeconds,
         } = json.flightPlan;
 
-        toast.success(`warping to ${warpJumpDestination}. Will use ${fuelConsumed} fuel and arrive in ${timeFromSeconds(timeRemainingInSeconds)}`);
+        toast.success(`warping to ${warpJumpDestination}. `
+          + `Will use ${fuelConsumed} fuel `
+          + `and arrive in ${timeFromSeconds(timeRemainingInSeconds)}`);
         resolve(json);
       })
       .catch((err) => {

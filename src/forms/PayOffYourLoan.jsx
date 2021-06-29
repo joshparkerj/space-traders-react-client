@@ -13,7 +13,9 @@ const PayOffYourLoan = function PayOffYourLoan({
         {...{ value, handleChange }}
         id="loan-repayment"
         name="loan ids"
-        options={loans.map((loan) => ({ optionName: `${loan.status} ${loan.type} loan`, optionValue: loan.id }))}
+        options={loans.map((loan) => (
+          { optionName: `${loan.status} ${loan.type} loan`, optionValue: loan.id }
+        ))}
       />
 
       <input type="submit" value="Submit" />

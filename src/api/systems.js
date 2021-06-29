@@ -26,7 +26,8 @@ const getSystemShipListings = function getSystemShipListings(setter) {
 };
 
 const getSystemFlightPlans = function getSystemFlightPlans(systemSymbol, setter) {
-  fetchData(`${root}systems/${systemSymbol}/flight-plans?token=${token}`, setter, 'flightPlans', 'id');
+  fetchData(`${root}systems/${systemSymbol}/flight-plans`
+    + `?token=${token}`, setter, 'flightPlans', 'id');
 };
 
 // TODO: get info on a system's docked ships

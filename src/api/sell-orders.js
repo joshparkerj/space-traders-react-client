@@ -8,7 +8,8 @@ const sellTradeGoods = function sellTradeGoods({
   shipId, good, quantity, setCredits, setMyShips, toastSuccess,
 }, toast) {
   return new Promise((resolve) => {
-    fetchPost(`${root}my/sell-orders?token=${token}&shipId=${shipId}&good=${good}&quantity=${quantity}`)
+    fetchPost(`${root}my/sell-orders`
+      + `?token=${token}&shipId=${shipId}&good=${good}&quantity=${quantity}`)
       .then((json) => {
         if (toastSuccess) {
           const { good: orderGood, total, quantity: orderQuantity } = json.order;

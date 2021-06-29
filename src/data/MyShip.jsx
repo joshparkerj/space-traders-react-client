@@ -2,8 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Datum from './Datum';
 
+import getCargo from './helpers/get-cargo';
+import getFuel from './helpers/get-fuel';
+
 const MyShip = function MyShip({ record: myShip }) {
-  const fuel = myShip.cargo.find((good) => good.good === 'FUEL')?.totalVolume || 0;
+  const fuel = getFuel(myShip);
   return (
     <Datum
       name="ship"
@@ -15,7 +18,7 @@ const MyShip = function MyShip({ record: myShip }) {
         myShip.speed,
         myShip.maxCargo - fuel,
         fuel,
-        myShip.cargo.filter((good) => good.good !== 'FUEL').map((good) => `${good.good} ${good.totalVolume}`).join('\n'),
+        getCargo(myShip),
         myShip.maxCargo - myShip.spaceAvailable - fuel,
       ].map((e, i) => ({ detail: e, id: i }))}
     />

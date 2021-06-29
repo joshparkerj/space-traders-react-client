@@ -13,7 +13,9 @@ const createFlightPlan = function createFlightPlan({ shipId, destination }, toas
           destination: flightPlanDestination, fuelConsumed, timeRemainingInSeconds,
         } = json.flightPlan;
 
-        toast.success(`flying to ${flightPlanDestination}. Will use ${fuelConsumed} fuel and arrive in ${timeFromSeconds(timeRemainingInSeconds)}`);
+        toast.success(`flying to ${flightPlanDestination}. `
+          + `Will use ${fuelConsumed} fuel `
+          + `and arrive in ${timeFromSeconds(timeRemainingInSeconds)}`);
         resolve(json);
       })
       .catch((err) => {

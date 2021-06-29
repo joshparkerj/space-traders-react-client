@@ -3,7 +3,8 @@ const timeFromSeconds = function timeFromSeconds(time) {
   if (time >= 60) {
     const minutes = Math.floor(time / 60);
     if (seconds > 0) {
-      return `${minutes} minute${minutes === 1 ? '' : 's'} and ${seconds} second${seconds === 1 ? '' : 's'}`;
+      return `${minutes} minute${minutes === 1 ? '' : 's'} `
+        + `and ${seconds} second${seconds === 1 ? '' : 's'}`;
     }
 
     return `${minutes} minute${minutes === 1 ? '' : 's'}`;

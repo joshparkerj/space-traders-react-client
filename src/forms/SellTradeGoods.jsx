@@ -30,7 +30,9 @@ const SellTradeGoods = function SellTradeGoods({
         name="ship"
         value={shipsValue}
         handleChange={handleShipChange}
-        options={ships.map((ship) => ({ optionName: `${ship.manufacturer} at ${ship.location}`, optionValue: ship.id }))}
+        options={ships.map((ship) => (
+          { optionName: `${ship.manufacturer} at ${ship.location}`, optionValue: ship.id }
+        ))}
       />
       <LabelForNumber
         id="sell-quantity"

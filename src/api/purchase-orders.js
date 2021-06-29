@@ -10,7 +10,8 @@ const placeANewPurchaseOrder = function placeANewPurchaseOrder(
   }, toast,
 ) {
   return new Promise((resolve, reject) => {
-    fetchPost(`${root}my/purchase-orders?token=${token}&shipId=${shipId}&good=${good}&quantity=${quantity}`)
+    fetchPost(`${root}my/purchase-orders`
+      + `?token=${token}&shipId=${shipId}&good=${good}&quantity=${quantity}`)
       .then((json) => {
         setCredits(json.credits);
         setMyShips((s) => [...s.map((ship) => (ship.id === json.ship.id ? json.ship : ship))]);

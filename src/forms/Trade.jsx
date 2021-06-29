@@ -23,7 +23,9 @@ const Trade = function Trade({
         name="ship id"
         value={shipValue}
         handleChange={handleShipChange}
-        options={ships.map((ship) => ({ optionName: `${ship.manufacturer} at ${ship.location}`, optionValue: ship.id }))}
+        options={ships.map((ship) => (
+          { optionName: `${ship.manufacturer} at ${ship.location}`, optionValue: ship.id }
+        ))}
       />
 
       <LabelForSelect
@@ -31,7 +33,9 @@ const Trade = function Trade({
         name="destination"
         value={destinationValue}
         handleChange={handleDestinationChange}
-        options={locations.map((location) => ({ optionName: `${location.symbol} (${location.name})`, optionValue: location.symbol }))}
+        options={locations.map((location) => (
+          { optionName: `${location.symbol} (${location.name})`, optionValue: location.symbol }
+        ))}
       />
 
       <LabelForSelect

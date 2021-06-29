@@ -2,7 +2,8 @@ import root from './root';
 import fetchData from './fetch-data';
 
 const getGameLeaderboardNetWorth = function getGameStatus(setter) {
-  fetchData(`${root}game/leaderboard/net-worth`, setter, 'netWorth'); // NOTE there is a second array, userNetWorth.
+  // NOTE there is a second array, userNetWorth.
+  fetchData(`${root}game/leaderboard/net-worth`, setter, 'netWorth');
   // TODO: handle the second array also.
 };
 

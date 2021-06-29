@@ -13,7 +13,9 @@ const AttemptWarpJump = function AttemptWarpJump({
         {...{ value, handleChange }}
         id="warp-jump-ship-id"
         name="ship id"
-        options={ships.map((ship) => ({ optionName: `${ship.manufacturer} at ${ship.location}`, optionValue: ship.id }))}
+        options={ships.map((ship) => (
+          { optionName: `${ship.manufacturer} at ${ship.location}`, optionValue: ship.id }
+        ))}
       />
 
       <input type="submit" value="Submit" />

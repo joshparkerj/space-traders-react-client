@@ -8,7 +8,16 @@ const FlightPlans = function FlightPlans({ flightPlans }) {
   return (
     <Data
       name="flight plans"
-      fields={['departed from', 'departure time', 'headed to', 'estimated time of arrival', 'ship type', 'ship id', 'flight plan id', 'owner']}
+      fields={[
+        'departed from',
+        'departure time',
+        'headed to',
+        'estimated time of arrival',
+        'ship type',
+        'ship id',
+        'flight plan id',
+        'owner',
+      ]}
       records={flightPlans.map((flightPlan) => ({ ...flightPlan, id: flightPlan.id }))}
       RowComponent={FlightPlan}
     />

@@ -14,13 +14,18 @@ const AutoRunStaticRoute = function AutoRunStaticRoute({
         name="Static Route Name"
         value={nameValue}
         handleChange={handleNameChange}
-        options={[{ optionName: 'Omicron Eridani', optionValue: 'Omicron Eridani' }, { optionName: 'Xiav', optionValue: 'Xiav' }]}
+        options={[
+          { optionName: 'Omicron Eridani', optionValue: 'Omicron Eridani' },
+          { optionName: 'Xiav', optionValue: 'Xiav' },
+        ]}
       />
       <LabelForSelect
         {...{ value, handleChange }}
         id="static-route-ship-id"
         name="ship id"
-        options={ships.map((ship) => ({ optionName: `${ship.manufacturer} at ${ship.location}`, optionValue: ship.id }))}
+        options={ships.map((ship) => (
+          { optionName: `${ship.manufacturer} at ${ship.location}`, optionValue: ship.id }
+        ))}
       />
 
       <input type="submit" value="Submit" />

@@ -4,9 +4,10 @@ import PropTypes from 'prop-types';
 import MyShip from './MyShip';
 import Data from './Data';
 
+import getFuel from './helpers/get-fuel';
+import getCargo from './helpers/get-cargo';
+
 const MyShips = function MyShips({ myShips }) {
-  const getFuel = (ship) => ship.cargo.find((good) => good.good === 'FUEL')?.totalVolume || 0;
-  const getCargo = (ship) => ship.cargo.filter((good) => good.good !== 'FUEL').map((good) => `${good.good} ${good.totalVolume}`).join('\n');
   return (
     <Data
       name="my ships"

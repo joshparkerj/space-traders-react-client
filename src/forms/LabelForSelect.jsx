@@ -8,7 +8,9 @@ const LabelForSelect = function LabelForSelect({
     <label htmlFor={id}>
       <h4>{name}</h4>
       <select {...{ id, value }} onChange={handleChange}>
-        {['', ...options].map(({ optionName, optionValue }) => <option key={optionValue || ''} value={optionValue || ''}>{optionName || ''}</option>)}
+        {['', ...options].map(({ optionName, optionValue }) => (
+          <option key={optionValue || ''} value={optionValue || ''}>{optionName || ''}</option>
+        ))}
       </select>
     </label>
   );
