@@ -1,22 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-const CheckSystem = function CheckSystem({
-  value, handleChange, handleSubmit,
-}) {
+import api from '../api/api';
+import handleChange from './helpers/handle-change';
+import handleSubmit from './helpers/handle-submit';
+
+const CheckSystem = function CheckSystem({ toast }) {
+  const [checkSystem, setCheckSystem] = useState('');
+
   return (
-    <form className="check system" onSubmit={handleSubmit}>
+    <form
+      className="check system"
+      onSubmit={handleSubmit(
+        api.systems.getSystem,
+        {
+          system: checkSystem,
+        },
+        toast,
+      )}
+    >
       <h3>check system symbol (two capital letters probably)</h3>
-      <input {...{ value }} type="text" onChange={handleChange} />
+      <input {...{ value: checkSystem }} type="text" onChange={handleChange(setCheckSystem)} />
       <input type="submit" value="Submit" />
     </form>
   );
 };
 
 CheckSystem.propTypes = {
-  value: PropTypes.string.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
+  toast: PropTypes.func.isRequired,
 };
 
 export default CheckSystem;

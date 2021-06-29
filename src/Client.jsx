@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 
-import Forms from './Forms';
+import Forms from './forms/Forms';
 
 import Users from './data/Users';
 import Loans from './data/Loans';

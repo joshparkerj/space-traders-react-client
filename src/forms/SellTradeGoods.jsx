@@ -1,44 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import LabelForSelect from './LabelForSelect';
 import LabelForNumber from './LabelForNumber';
 
+import api from '../api/api';
+
+import handleSubmit from './helpers/handle-submit';
+import handleChange from './helpers/handle-change';
+
 const SellTradeGoods = function SellTradeGoods({
-  goods,
-  ships,
-  goodsValue,
-  shipsValue,
-  quantityValue,
-  handleGoodsChange,
-  handleShipChange,
-  handleQuantityChange,
-  handleSubmit,
+  goods, myShips, setCredits, setMyShips, toast,
 }) {
+  const [sellGood, setSellGood] = useState('');
+  const [sellShip, setSellShip] = useState('');
+  const [sellQuantity, setSellQuantity] = useState('0');
   return (
-    <form className="sell-trade-goods" onSubmit={handleSubmit}>
+    <form
+      className="sell-trade-goods"
+      onSubmit={handleSubmit(
+        api.sellOrders.sellTradeGoods,
+        {
+          shipId: sellShip,
+          good: sellGood,
+          quantity: sellQuantity,
+          toastSuccess: true,
+          setCredits,
+          setMyShips,
+        },
+        toast,
+      )}
+    >
       <h3>sell trade goods</h3>
       <LabelForSelect
         id="sell-good"
         name="good"
-        value={goodsValue}
-        handleChange={handleGoodsChange}
+        value={sellGood}
+        handleChange={handleChange(setSellGood)}
         options={goods.map((good) => ({ optionName: good.symbol, optionValue: good.symbol }))}
       />
       <LabelForSelect
         id="sell-ship"
         name="ship"
-        value={shipsValue}
-        handleChange={handleShipChange}
-        options={ships.map((ship) => (
+        value={sellShip}
+        handleChange={handleChange(setSellShip)}
+        options={myShips.map((ship) => (
           { optionName: `${ship.manufacturer} at ${ship.location}`, optionValue: ship.id }
         ))}
       />
       <LabelForNumber
         id="sell-quantity"
         name="quantity"
-        value={quantityValue}
-        handleChange={handleQuantityChange}
+        value={sellQuantity}
+        handleChange={handleChange(setSellQuantity)}
       />
 
       <input type="submit" value="Submit" />
@@ -48,19 +62,15 @@ const SellTradeGoods = function SellTradeGoods({
 
 SellTradeGoods.propTypes = {
   goods: PropTypes.arrayOf(PropTypes.object),
-  ships: PropTypes.arrayOf(PropTypes.object),
-  goodsValue: PropTypes.string.isRequired,
-  handleGoodsChange: PropTypes.func.isRequired,
-  shipsValue: PropTypes.string.isRequired,
-  handleShipChange: PropTypes.func.isRequired,
-  quantityValue: PropTypes.string.isRequired,
-  handleQuantityChange: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
+  myShips: PropTypes.arrayOf(PropTypes.object),
+  setCredits: PropTypes.func.isRequired,
+  setMyShips: PropTypes.func.isRequired,
+  toast: PropTypes.func.isRequired,
 };
 
 SellTradeGoods.defaultProps = {
   goods: [],
-  ships: [],
+  myShips: [],
 };
 
 export default SellTradeGoods;

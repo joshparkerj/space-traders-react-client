@@ -1,16 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import LabelForSelect from './LabelForSelect';
 
-const PayOffYourLoan = function PayOffYourLoan({
-  loans, value, handleChange, handleSubmit,
-}) {
+import api from '../api/api';
+import handleChange from './helpers/handle-change';
+import handleSubmit from './helpers/handle-submit';
+
+const PayOffYourLoan = function PayOffYourLoan({ loans, toast }) {
+  const [repayLoan, setRepayLoan] = useState('');
+
   return (
-    <form className="pay-off-your-loan" onSubmit={handleSubmit}>
+    <form
+      className="pay-off-your-loan"
+      onSubmit={handleSubmit(
+        api.loans.payOffYourLoan,
+        {
+          loan: loans.find((loan) => loan.id === repayLoan),
+        },
+        toast,
+      )}
+    >
       <h3>pay off your loan</h3>
       <LabelForSelect
-        {...{ value, handleChange }}
+        {...{ value: repayLoan, handleChange }}
+        value={repayLoan}
+        handleChange={handleChange(setRepayLoan)}
         id="loan-repayment"
         name="loan ids"
         options={loans.map((loan) => (
@@ -25,9 +40,7 @@ const PayOffYourLoan = function PayOffYourLoan({
 
 PayOffYourLoan.propTypes = {
   loans: PropTypes.arrayOf(PropTypes.object),
-  value: PropTypes.string.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
+  toast: PropTypes.func.isRequired,
 };
 
 PayOffYourLoan.defaultProps = {

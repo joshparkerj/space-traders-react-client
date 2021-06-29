@@ -1,25 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import LabelForSelect from './LabelForSelect';
 
+import fly from '../auto-trade/fly';
+import handleSubmit from './helpers/handle-submit';
+import handleChange from './helpers/handle-change';
+
 const CreateFlightPlan = function CreateFlightPlan({
-  ships,
-  shipsValue,
-  locations,
-  destinationValue,
-  handleShipChange,
-  handleDestinationChange,
-  handleSubmit,
+  myShips, locations, setCredits, setMyShips, setMarketLocation, toast,
 }) {
+  const [flightPlanShip, setFlightPlanShips] = useState('');
+  const [flightPlanDestination, setFlightPlanDestination] = useState('');
+
   return (
-    <form className="create-flight-plan" onSubmit={handleSubmit}>
+    <form
+      className="create-flight-plan"
+      onSubmit={handleSubmit(
+        fly,
+        {
+          ship: myShips.find((ship) => ship.id === flightPlanShip),
+          destination: flightPlanDestination,
+          setCredits,
+          setMyShips,
+          setMarketLocation,
+        },
+        toast,
+      )}
+    >
       <h3>create flight plan</h3>
       <LabelForSelect
         id="flight-plan-destination"
         name="destination"
-        value={destinationValue}
-        handleChange={handleDestinationChange}
+        value={flightPlanDestination}
+        handleChange={handleChange(setFlightPlanDestination)}
         options={locations.map((location) => (
           { optionName: `${location.symbol} (${location.name})`, optionValue: location.symbol }
         ))}
@@ -27,9 +41,9 @@ const CreateFlightPlan = function CreateFlightPlan({
       <LabelForSelect
         id="flight-plan-ship"
         name="ship"
-        value={shipsValue}
-        handleChange={handleShipChange}
-        options={ships.map((ship) => (
+        value={flightPlanShip}
+        handleChange={handleChange(setFlightPlanShips)}
+        options={myShips.map((ship) => (
           { optionName: `${ship.manufacturer} at ${ship.location}`, optionValue: ship.id }
         ))}
       />
@@ -41,17 +55,16 @@ const CreateFlightPlan = function CreateFlightPlan({
 
 CreateFlightPlan.propTypes = {
   locations: PropTypes.arrayOf(PropTypes.object),
-  ships: PropTypes.arrayOf(PropTypes.object),
-  destinationValue: PropTypes.string.isRequired,
-  handleDestinationChange: PropTypes.func.isRequired,
-  shipsValue: PropTypes.string.isRequired,
-  handleShipChange: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
+  myShips: PropTypes.arrayOf(PropTypes.object),
+  setMarketLocation: PropTypes.func.isRequired,
+  setCredits: PropTypes.func.isRequired,
+  setMyShips: PropTypes.func.isRequired,
+  toast: PropTypes.func.isRequired,
 };
 
 CreateFlightPlan.defaultProps = {
   locations: [],
-  ships: [],
+  myShips: [],
 };
 
 export default CreateFlightPlan;

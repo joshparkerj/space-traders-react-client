@@ -20,41 +20,38 @@ const Data = function Data({
   }, [fields]);
 
   return (
-    <div className={name.replace(' ', '-')}>
-      <button
+    <table className={name.replace(' ', '-')}>
+      <input
         type="button"
         onClick={() => setShow((prev) => !prev)}
-      >
-        {show ? 'hide' : 'show'}
-      </button>
-      <table className={name.replace(' ', '-')}>
-        <caption>{name}</caption>
-        <thead>
-          <tr>
-            {fields.map((field, i) => {
-              const key = useFilters ? field[0] : field;
-              return (
-                <th {...{ key }}>
-                  <span>{key}</span>
-                  {useFilters && (
-                    <FilterControl
-                      {...{
-                        i, filters, setFilters, showFilters, setShowFilters,
-                      }}
-                      filterInputId={`${name.replace(' ', '-')}-filter-${i}`}
-                    />
-                  )}
-                </th>
-              );
-            })}
-          </tr>
-        </thead>
-        <DataTableBody {...{
-          show, useFilters, records, RowComponent, fields, filters, showFilters,
-        }}
-        />
-      </table>
-    </div>
+        value={show ? 'hide' : 'show'}
+      />
+      <caption>{name}</caption>
+      <thead>
+        <tr>
+          {fields.map((field, i) => {
+            const key = useFilters ? field[0] : field;
+            return (
+              <th {...{ key }}>
+                <span>{key}</span>
+                {useFilters && (
+                  <FilterControl
+                    {...{
+                      i, filters, setFilters, showFilters, setShowFilters,
+                    }}
+                    filterInputId={`${name.replace(' ', '-')}-filter-${i}`}
+                  />
+                )}
+              </th>
+            );
+          })}
+        </tr>
+      </thead>
+      <DataTableBody {...{
+        show, useFilters, records, RowComponent, fields, filters, showFilters,
+      }}
+      />
+    </table>
   );
 };
 

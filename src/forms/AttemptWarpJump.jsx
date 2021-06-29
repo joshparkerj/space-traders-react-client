@@ -1,19 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import LabelForSelect from './LabelForSelect';
 
-const AttemptWarpJump = function AttemptWarpJump({
-  ships, value, handleChange, handleSubmit,
-}) {
+import api from '../api/api';
+import handleSubmit from './helpers/handle-submit';
+import handleChange from './helpers/handle-change';
+
+const AttemptWarpJump = function AttemptWarpJump({ myShips, toast }) {
+  const [warpShip, setWarpShip] = useState('');
+
   return (
-    <form className="attempt-warp-jump" onSubmit={handleSubmit}>
+    <form
+      className="attempt-warp-jump"
+      onSubmit={handleSubmit(
+        api.warpJump.attemptAWarpJump,
+        {
+          shipId: warpShip,
+        },
+        toast,
+      )}
+    >
       <h3>Attempt a warp jump</h3>
       <LabelForSelect
-        {...{ value, handleChange }}
+        {...{ value: warpShip, handleChange }}
+        value={warpShip}
+        handleChange={handleChange(setWarpShip)}
         id="warp-jump-ship-id"
         name="ship id"
-        options={ships.map((ship) => (
+        options={myShips.map((ship) => (
           { optionName: `${ship.manufacturer} at ${ship.location}`, optionValue: ship.id }
         ))}
       />
@@ -24,14 +39,12 @@ const AttemptWarpJump = function AttemptWarpJump({
 };
 
 AttemptWarpJump.propTypes = {
-  ships: PropTypes.arrayOf(PropTypes.object),
-  value: PropTypes.string.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
+  myShips: PropTypes.arrayOf(PropTypes.object),
+  toast: PropTypes.func.isRequired,
 };
 
 AttemptWarpJump.defaultProps = {
-  ships: [],
+  myShips: [],
 };
 
 export default AttemptWarpJump;
