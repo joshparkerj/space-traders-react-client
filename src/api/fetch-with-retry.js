@@ -10,11 +10,15 @@ const fetchWithRetry = function fetchWithRetry(fetchAddress, fetchOptions, secon
             resolve(fetchWithRetry(fetchAddress, corsOptions, seconds + 1))
           ), 1000 * seconds);
         } else if (r.status === 429) {
-          setTimeout(() => resolve(fetchWithRetry(fetchAddress, corsOptions, seconds + 1)), 1000 * seconds * r.headers.get('retry-after'));
+          setTimeout(() => (
+            resolve(fetchWithRetry(fetchAddress, corsOptions, seconds + 1))
+          ), 1000 * seconds * r.headers.get('retry-after'));
         } else if (r.status === 400) {
           r.json()
             .then((j) => {
-              if (j && j.error && j.error.message === 'Quantity exceeds available cargo space on ship.') {
+              if (j
+                && j.error
+                && j.error.message === 'Quantity exceeds available cargo space on ship.') {
                 setTimeout(() => (
                   fetchWithRetry(fetchAddress, corsOptions, seconds + 1)
                     .then((res) => resolve(res))

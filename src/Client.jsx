@@ -78,7 +78,9 @@ function Client() {
 
   useEffect(() => {
     if (myShips.length > 0) {
-      const systems = new Set(myShips.map((ship) => ship.location && ship.location.match(/^(?<system>[^-]*)/).groups.system));
+      const systems = new Set(myShips.map((
+        (ship) => ship.location && ship.location.match(/^(?<system>[^-]*)/).groups.system
+      )));
       const sysArray = [...systems].filter((sy) => sy !== undefined);
       if (sysArray.reduce((acc, e) => acc || !currentSystems.has(e), false)) {
         setCurrentSystems(new Set(sysArray));
@@ -96,7 +98,11 @@ function Client() {
     if (marketLocation) {
       api.locations.getLocationMarketplaces(marketLocation, (newMarketGoods) => {
         const fuel = newMarketGoods.find((good) => good.symbol === 'FUEL');
-        const stuff = newMarketGoods.filter((good) => good.symbol !== 'FUEL').sort(({ symbol: a }, { symbol: b }) => (a > b ? 1 : -1));
+        const stuff = newMarketGoods.filter((good) => (
+          good.symbol !== 'FUEL'
+        )).sort(({ symbol: a }, { symbol: b }) => (
+          a > b ? 1 : -1
+        ));
         if (fuel) {
           setMarketGoods([fuel, ...stuff]);
         } else {

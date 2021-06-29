@@ -1,7 +1,8 @@
 import React from 'react';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import Datum from './Datum';
+
+import ageFromTimestamp from '../util/age-from-timestamp';
 
 const User = function User({ record: user }) {
   return (
@@ -9,7 +10,7 @@ const User = function User({ record: user }) {
       name="user"
       details={[
         user.username,
-        moment(user.joinedAt).fromNow(true),
+        ageFromTimestamp(user.joinedAt),
         user.shipCount,
         user.structureCount,
         user.credits,
