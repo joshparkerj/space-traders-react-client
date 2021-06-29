@@ -19,7 +19,6 @@ function Client() {
   const [ships, setShips] = useState([]);
   const [myShips, setMyShips] = useState([]);
   const [goods, setGoods] = useState([]);
-  const [marketGoods, setMarketGoods] = useState([]);
   const [locations, setLocations] = useState([]);
   const [gameStatus, setGameStatus] = useState('');
   const [marketLocation, setMarketLocation] = useState('');
@@ -57,24 +56,6 @@ function Client() {
     )));
   }, [currentSystems]);
 
-  useEffect(() => {
-    if (marketLocation) {
-      api.locations.getLocationMarketplaces(marketLocation, (newMarketGoods) => {
-        const fuel = newMarketGoods.find((good) => good.symbol === 'FUEL');
-        const stuff = newMarketGoods.filter((good) => (
-          good.symbol !== 'FUEL'
-        )).sort(({ symbol: a }, { symbol: b }) => (
-          a > b ? 1 : -1
-        ));
-        if (fuel) {
-          setMarketGoods([fuel, ...stuff]);
-        } else {
-          setMarketGoods(stuff);
-        }
-      });
-    }
-  }, [marketLocation]);
-
   return (
     <div className="App">
       <header className="App-header">
@@ -84,7 +65,7 @@ function Client() {
       </header>
       <main>
         <DataSection {...{
-          users, credits, loans, ships, myShips, marketGoods, locations,
+          users, credits, loans, ships, myShips, locations, marketLocation,
         }}
         />
         <Forms {...{
