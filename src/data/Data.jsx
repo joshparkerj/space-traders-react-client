@@ -21,12 +21,15 @@ const Data = function Data({
 
   return (
     <table className={name.replace(' ', '-')}>
-      <input
-        type="button"
-        onClick={() => setShow((prev) => !prev)}
-        value={show ? 'hide' : 'show'}
-      />
-      <caption>{name}</caption>
+      <caption>
+        <input
+          type="button"
+          onClick={() => setShow((prev) => !prev)}
+          value={show ? 'hide' : 'show'}
+        />
+        <br />
+        {name}
+      </caption>
       <thead>
         <tr>
           {fields.map((field, i) => {

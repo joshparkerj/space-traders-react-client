@@ -2,17 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 
 import Forms from './forms/Forms';
-
-import Users from './data/Users';
-import Loans from './data/Loans';
-import Ships from './data/Ships';
-import MyShips from './data/MyShips';
-import Market from './data/Market';
-import Locations from './data/Locations';
-// import FlightPlans from './data/FlightPlans';
-// import Goods from './data/Goods';
-// import LoanTypes from './data/LoanTypes';
-// import WhereToSell from './data/WhereToSell';
+import DataSection from './data/DataSection';
 
 import api from './api/api';
 
@@ -93,19 +83,10 @@ function Client() {
         <h2>{gameStatus}</h2>
       </header>
       <main>
-        <section className="data">
-          <h2>data</h2>
-          <Users {...{ users, credits }} />
-          <Loans {...{ loans }} />
-          <Ships {...{ ships }} />
-          <MyShips {...{ myShips }} />
-          <Market goods={marketGoods} />
-          <Locations {...{ locations }} />
-          {/* <FlightPlans />
-          <Goods />
-          <LoanTypes />
-          <WhereToSell /> */}
-        </section>
+        <DataSection {...{
+          users, credits, loans, ships, myShips, marketGoods, locations,
+        }}
+        />
         <Forms {...{
           goods,
           loanTypes,
