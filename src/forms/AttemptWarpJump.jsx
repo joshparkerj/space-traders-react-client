@@ -10,10 +10,9 @@ const AttemptWarpJump = function AttemptWarpJump({
     <form className="attempt-warp-jump" onSubmit={handleSubmit}>
       <h3>Attempt a warp jump</h3>
       <LabelForSelect
+        {...{ value, handleChange }}
         id="warp-jump-ship-id"
         name="ship id"
-        value={value}
-        handleChange={handleChange}
         options={ships.map((ship) => ({ optionName: `${ship.manufacturer} at ${ship.location}`, optionValue: ship.id }))}
       />
 

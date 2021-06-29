@@ -10,10 +10,9 @@ const PayOffYourLoan = function PayOffYourLoan({
     <form className="pay-off-your-loan" onSubmit={handleSubmit}>
       <h3>pay off your loan</h3>
       <LabelForSelect
+        {...{ value, handleChange }}
         id="loan-repayment"
         name="loan ids"
-        value={value}
-        handleChange={handleChange}
         options={loans.map((loan) => ({ optionName: `${loan.status} ${loan.type} loan`, optionValue: loan.id }))}
       />
 

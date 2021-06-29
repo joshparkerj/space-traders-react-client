@@ -10,10 +10,9 @@ const TakeOutALoan = function TakeOutALoan({
     <form className="take-out-a-loan" onSubmit={handleSubmit}>
       <h3>take out a loan</h3>
       <LabelForSelect
+        {...{ value, handleChange }}
         id="loan-form-types"
         name="loan types"
-        value={value}
-        handleChange={handleChange}
         options={loanTypes.map((lt) => ({ optionName: lt, optionValue: lt }))}
       />
 

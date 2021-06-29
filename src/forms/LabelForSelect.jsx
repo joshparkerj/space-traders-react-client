@@ -7,7 +7,7 @@ const LabelForSelect = function LabelForSelect({
   return (
     <label htmlFor={id}>
       <h4>{name}</h4>
-      <select id={id} value={value} onChange={handleChange}>
+      <select {...{ id, value }} onChange={handleChange}>
         {['', ...options].map(({ optionName, optionValue }) => <option key={optionValue || ''} value={optionValue || ''}>{optionName || ''}</option>)}
       </select>
     </label>

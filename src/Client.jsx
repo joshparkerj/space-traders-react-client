@@ -129,12 +129,12 @@ function Client() {
       <main>
         <section className="data">
           <h2>data</h2>
-          <Users users={users} credits={credits} />
-          <Loans loans={loans} />
-          <Ships ships={ships} />
-          <MyShips myShips={myShips} />
+          <Users {...{ users, credits }} />
+          <Loans {...{ loans }} />
+          <Ships {...{ ships }} />
+          <MyShips {...{ myShips }} />
           <Market goods={marketGoods} />
-          <Locations locations={locations} />
+          <Locations {...{ locations }} />
         </section>
         <section className="forms">
           <h2>forms</h2>
@@ -148,7 +148,7 @@ function Client() {
             )}
           />
           <PurchaseAShip
-            ships={ships}
+            {...{ ships }}
             value={purchaseAShipValue}
             handleChange={handleChange(setPurchaseAShipValue)}
             handleSubmit={handleSubmit(
@@ -162,7 +162,7 @@ function Client() {
             )}
           />
           <PlaceANewPurchaseOrder
-            goods={goods}
+            {...{ goods }}
             ships={myShips}
             goodsValue={purchaseOrderGoodsValue}
             shipsValue={purchaseOrderShipsValue}
@@ -183,7 +183,7 @@ function Client() {
             )}
           />
           <SellTradeGoods
-            goods={goods}
+            {...{ goods }}
             ships={myShips}
             goodsValue={sellGoodValue}
             shipsValue={sellShipValue}
@@ -204,9 +204,9 @@ function Client() {
             )}
           />
           <CreateFlightPlan
+            {...{ locations }}
             ships={myShips}
             shipsValue={flightPlanShipsValue}
-            locations={locations}
             destinationValue={flightPlanDestinationValue}
             handleShipChange={handleChange(setFlightPlanShipsValue)}
             handleDestinationChange={handleChange(setFlightPlanDestinationValue)}
@@ -239,13 +239,12 @@ function Client() {
             )}
           />
           <Trade
+            {...{ locations, goods }}
             ships={myShips}
             shipValue={tradeShipValue}
             handleShipChange={handleChange(setTradeShipValue)}
-            locations={locations}
             destinationValue={tradeDestinationValue}
             handleDestinationChange={handleChange(setTradeDestinationValue)}
-            goods={goods}
             goodValue={tradeGoodValue}
             handleGoodChange={handleChange(setTradeGoodValue)}
             handleSubmit={handleSubmit(
@@ -270,7 +269,7 @@ function Client() {
             )}
           />
           <PayOffYourLoan
-            loans={loans}
+            {...{ loans }}
             value={repayLoanValue}
             handleChange={handleChange(setRepayLoanValue)}
             handleSubmit={handleSubmit(

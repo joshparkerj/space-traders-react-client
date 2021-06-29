@@ -7,7 +7,7 @@ const CheckSystem = function CheckSystem({
   return (
     <form className="check system" onSubmit={handleSubmit}>
       <h3>check system symbol (two capital letters probably)</h3>
-      <input type="text" value={value} onChange={handleChange} />
+      <input {...{ value }} type="text" onChange={handleChange} />
       <input type="submit" value="Submit" />
     </form>
   );

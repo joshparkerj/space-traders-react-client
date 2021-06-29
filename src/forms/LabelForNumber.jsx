@@ -7,7 +7,7 @@ const LabelForNumber = function LabelForNumber({
   return (
     <label htmlFor={id}>
       <h4>{name}</h4>
-      <input type="number" id={id} value={value} onChange={handleChange} />
+      <input type="number" {...{ id, value }} onChange={handleChange} />
     </label>
   );
 };
