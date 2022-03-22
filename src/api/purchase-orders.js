@@ -4,11 +4,9 @@ import fetchPost from './fetch-post';
 
 // https://api.spacetraders.io/#api-purchase_orders
 
-const placeANewPurchaseOrder = function placeANewPurchaseOrder(
-  {
-    shipId, good, quantity, setCredits, setMyShips, toastSuccess,
-  }, toast,
-) {
+const placeANewPurchaseOrder = function placeANewPurchaseOrder({
+  shipId, good, quantity, setCredits, setMyShips, toastSuccess,
+}, toast) {
   return new Promise((resolve, reject) => {
     fetchPost(`${root}my/purchase-orders`
       + `?token=${token}&shipId=${shipId}&good=${good}&quantity=${quantity}`)

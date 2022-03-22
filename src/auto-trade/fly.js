@@ -28,9 +28,9 @@ const fly = function fly({
       }, toast)
         .then(() => api.warpJump.attemptAWarpJump({ shipId: ship.id }, toast))
         .then((r) => (
-          new Promise((res) => (
-            setTimeout(() => res(r), 1000 * (1 + r.flightPlan.timeRemainingInSeconds))
-          ))))
+          new Promise((res) => {
+            setTimeout(() => res(r), 1000 * (1 + r.flightPlan.timeRemainingInSeconds));
+          })))
         .then(() => fly({
           ship: { ...fwws, location: otherSideWormhole },
           destination: fwwd,
