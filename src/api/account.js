@@ -5,7 +5,7 @@ import fetchData from './fetch-data';
 const getMyAccount = function getMyAccount(setter) {
   return new Promise((resolve) => {
     fetchData(`${root}my/account?token=${token}`, setter, 'user', 'username')
-      .then((r) => resolve(r));
+      .then((r) => resolve(r)).catch(() => { });
   });
 };
 

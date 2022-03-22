@@ -4,7 +4,7 @@ import fetchPost from './fetch-post';
 import fetchData from './fetch-data';
 
 const getMyLoans = function getMyLoans(setter) {
-  fetchData(`${root}my/loans?token=${token}`, setter, 'loans', 'id');
+  fetchData(`${root}my/loans?token=${token}`, setter, 'loans', 'id').catch(() => { });
 };
 
 const payOffYourLoan = function payOffYourLoan({ loan }, toast) {

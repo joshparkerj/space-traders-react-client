@@ -5,11 +5,11 @@ import fetchData from './fetch-data';
 // https://api.spacetraders.io/#api-types
 
 const getTypesOfGoods = function getTypesOfGoods(setter) {
-  fetchData(`${root}types/goods?token=${token}`, setter, 'goods', 'symbol');
+  fetchData(`${root}types/goods?token=${token}`, setter, 'goods', 'symbol').catch(() => { });
 };
 
 const getTypesOfLoans = function getTypesOfLoans(setter) {
-  fetchData(`${root}types/loans?token=${token}`, setter, 'loans', 'type');
+  fetchData(`${root}types/loans?token=${token}`, setter, 'loans', 'type').catch(() => { });
 };
 
 // TODO: Get available structures

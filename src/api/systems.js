@@ -22,12 +22,14 @@ const getSystemShipListings = function getSystemShipListings(setter) {
           )),
         ]
       ));
+    })
+    .catch(() => {
     });
 };
 
 const getSystemFlightPlans = function getSystemFlightPlans(systemSymbol, setter) {
   fetchData(`${root}systems/${systemSymbol}/flight-plans`
-    + `?token=${token}`, setter, 'flightPlans', 'id');
+    + `?token=${token}`, setter, 'flightPlans', 'id').catch(() => { });
 };
 
 // TODO: get info on a system's docked ships
@@ -35,7 +37,7 @@ const getSystemFlightPlans = function getSystemFlightPlans(systemSymbol, setter)
 const getSystemLocations = function getSystemLocations(system, setter) {
   return new Promise((resolve) => {
     fetchData(`${root}systems/${system}/locations?token=${token}`, setter, 'locations', 'symbol')
-      .then((r) => resolve(r));
+      .then((r) => resolve(r)).catch(() => { });
   });
 };
 
@@ -46,7 +48,7 @@ const getSystem = function getSystem({ system }, toast) {
       .then(({ system: sys }) => {
         toast(`${sys.symbol} stands for the ${sys.name} system!`);
         resolve(sys);
-      });
+      }).catch(() => { });
   });
 };
 

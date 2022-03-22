@@ -5,11 +5,9 @@ import fetchData from './fetch-data';
 
 // https://api.spacetraders.io/#api-ships
 
-const purchaseAShip = function purchaseAShip(
-  {
-    location, type, setMyShips, setCredits,
-  }, toast,
-) {
+const purchaseAShip = function purchaseAShip({
+  location, type, setMyShips, setCredits,
+}, toast) {
   fetchPost(`${root}my/ships?token=${token}&location=${location}&type=${type}`)
     .then((json) => {
       setMyShips((s) => [...s, json.ship]);
@@ -29,7 +27,7 @@ const getMyShip = function getMyShip(shipId, setter) {
 };
 
 const getMyShips = function getMyShips(setter) {
-  fetchData(`${root}my/ships?token=${token}`, setter, 'ships', 'id');
+  fetchData(`${root}my/ships?token=${token}`, setter, 'ships', 'id').catch(() => { });
 };
 
 // TODO: Jettison cargo
