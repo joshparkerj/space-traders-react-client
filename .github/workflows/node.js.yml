@@ -32,6 +32,7 @@ jobs:
     - run: echo "const spaceTradersApiAccessToken = '$TOKEN';" > ./src/api/space-traders-api-access-token.js
     - run: echo "export default spaceTradersApiAccessToken;" >> ./src/api/space-traders-api-access-token.js
     - run: npm ci
+    - run: npm audit
     - run: npm run build --if-present
     - run: npm run lint
     - run: npm test
