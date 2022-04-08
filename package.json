@@ -5,7 +5,8 @@
   "scripts": {
     "build": "webpack",
     "test": "jest",
-    "lint": "npx eslint \"./src/**/*.js\" \"./src/**/*.jsx\""
+    "lint": "npx eslint \"./src/**/*.js\" \"./src/**/*.jsx\" \"./*.js\"",
+    "token": "node ./token.js"
   },
   "eslintConfig": {
     "extends": [
@@ -27,7 +28,6 @@
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
-    "node-fetch": "^3.2.3",
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
