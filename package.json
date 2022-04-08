@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "webpack",
-    "test": "jest",
+    "test": "jest --coverage",
     "lint": "npx eslint \"./src/**/*.js\" \"./src/**/*.jsx\" \"./*.js\"",
     "token": "node ./token.js"
   },

@@ -12,7 +12,7 @@ const options = {
 const req = request(options, (res) => {
   res.on('data', (d) => {
     const { token } = JSON.parse(d.toString());
-    writeFile('src/api/space-traders-api-acess-token.json', JSON.stringify(token));
+    writeFile('src/api/space-traders-api-acess-token.js', `export default'${token}';\n`);
   });
 });
 
