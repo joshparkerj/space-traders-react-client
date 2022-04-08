@@ -1,5 +1,5 @@
 const { request } = require('https');
-const { writeFile } = require('fs/promises');
+const { writeFile } = require('fs');
 
 const username = require('./username.json');
 
